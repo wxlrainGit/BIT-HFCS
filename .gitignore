@@ -1,0 +1,13 @@
+# Dependency directories
+node_modules/
+
+# channel config directory
+*.tx
+*.block
+
+# crypto config directory
+crypto-config/
+
+# docker-compose-e2e.yaml
+docker-compose-e2e.yaml
+
