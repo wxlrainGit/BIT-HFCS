@@ -49,9 +49,10 @@ type Human struct {
 	ID            string `json:"id"`
 	Sex           string `json:"sex"`
 	Name          string `json:"name"`
-	FatherID      string `json:"fatehrid"`
+	FatherID      string `json:"fatherid"`
 	MotherID      string `json:"motherid"`
 	SpouseID      string `json:"spouseid"`
+	Marry_Cert    string `json:"marry_cert_id"`
 	ChildID  [10] string `json:"childid"`
 	NewChild [10] string `json:"newchild"`
 }
@@ -306,8 +307,8 @@ func (s *SmartContract) createHuman(APIstub shim.ChaincodeStubInterface, args []
 }
 
 func (s *SmartContract) marry(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
-	//2paramtes husbandID wifeID
-	if len(args) != 2 {
+	//3paramtes husbandID ,wifeID,date
+	if len(args) != 3 {
 		return shim.Error("Incorrect number of arguments. Expecting 2")
 	}
 	//whether husband is exitd
@@ -331,12 +332,21 @@ func (s *SmartContract) marry(APIstub shim.ChaincodeStubInterface, args []string
 	if 0 != len(wife.SpouseID) {
 		return shim.Error("{\"Error\":\"Failed to married")
 	}
+
+	//generate marry id
+	rd := strconv.Itoa(rand.Intn(100))
+	str := strings.Join([]string{args[2],rd},"")
+	hashstr := hex.EncodeToString([]byte(str))
+	marry_cert_id  := strings.Join([]string{"J110101",args[2],hashstr[0:6]},"-")
+	
 	//become husband
 	husband.SpouseID = wife.ID
+	husband.Marry_Cert = marry_cert_id
 	husbandAsBytes, _ = json.Marshal(husband)
 	APIstub.PutState(args[0], husbandAsBytes)
 	//become wife
 	wife.SpouseID = husband.ID
+	wife.Marry_Cert = marry_cert_id
 	wifeAsBytes, _ = json.Marshal(wife)
 	APIstub.PutState(args[1], wifeAsBytes)
 
