@@ -10,9 +10,9 @@ var options = {
     channel_id: 'mychannel', 
     chaincode_id: 'mycc', 
     network_url: 'grpcs://localhost:7051',//因为启用了TLS，所以是grpcs,如果没有启用TLS，那么就是grpc 
-    privateKeyFolder:'/root/BIT-HFCS/network/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore', 
-    signedCert:'/root/BIT-HFCS/network/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem', 
-    tls_cacerts:'/root/BIT-HFCS/network/first-network/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt', 
+    privateKeyFolder:'../network/start-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore', 
+    signedCert:'../network/start-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem', 
+    tls_cacerts:'../network/start-network/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt', 
     server_hostname: "peer0.org1.example.com" 
 };
 

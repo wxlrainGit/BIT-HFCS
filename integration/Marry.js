@@ -13,10 +13,10 @@ var options = {
     peer_url: 'grpcs://localhost:7051',//因为启用了TLS，所以是grpcs,如果没有启用TLS，那么就是grpc 
     event_url: 'grpcs://localhost:7053',//因为启用了TLS，所以是grpcs,如果没有启用TLS，那么就是grpc 
     orderer_url: 'grpcs://localhost:7050',//因为启用了TLS，所以是grpcs,如果没有启用TLS，那么就是grpc 
-    privateKeyFolder:'/root/BIT-HFCS/network/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore', 
-    signedCert:'/root/BIT-HFCS/network/first-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem', 
-    peer_tls_cacerts:'/root/BIT-HFCS/network/first-network/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt', 
-    orderer_tls_cacerts:'/root/BIT-HFCS/network/first-network/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt', 
+    privateKeyFolder:'../network/start-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore', 
+    signedCert:'../network/start-network/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem', 
+    peer_tls_cacerts:'../network/start-network/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt', 
+    orderer_tls_cacerts:'../network/start-network/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt', 
     server_hostname: "peer0.org1.example.com" 
 };
 
