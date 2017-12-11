@@ -119,18 +119,20 @@ func (s *SmartContract) queryID(APIstub shim.ChaincodeStubInterface, args []stri
 
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
 	var humanA Human
-	humanA.ID       = "1111111"
+	humanA.ID       = "110105199409026676"
 	humanA.Sex      = "male"
-	humanA.FatherID = "0000000"
-	humanA.MotherID = "0000001"
+	humanA.Name     = "李雷雷"
+	humanA.FatherID = "110105197003025376"
+	humanA.MotherID = "110105197302055386"
 	humanA.ChildID[0] = "0"
 
 
 	var humanB Human
-	humanB.ID       = "1111112"
+	humanB.ID       = "110105199409026686"
 	humanB.Sex      = "female"
-	humanB.FatherID = "0000002"
-	humanB.MotherID = "0000003"
+	humanB.Name     = "韩梅梅"
+	humanB.FatherID = "110105197107025376"
+	humanB.MotherID = "110105197303055386"
 	humanB.ChildID[0] = "0"
 
 	
