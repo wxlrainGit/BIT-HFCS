@@ -44,6 +44,7 @@ type SmartContract struct {
 }
 
 // Define the car structure, with 4 properties.  Structure tags are used by encoding/json library
+//human ID
 type Human struct {
 	
 	ID            string `json:"id"`
@@ -57,6 +58,7 @@ type Human struct {
 	NewChild [10] string `json:"newchild"`
 }
 
+//birth cert
 type Birth struct {
 
 	BirthID      string `json:"birthid"`
@@ -65,6 +67,14 @@ type Birth struct {
 	FatherID     string `json:"fatherid"`
 	MotherID     string `json:"motherid"`
 	HosptialID   string `json:"hosptialid"`
+}
+
+//marry card
+type Marry_Card struct {
+
+	Marry_Cert     string `json:"marry_cert_id"`
+	Husband_ID     string `json:"husband_id"`
+	Wife_ID        string `json:"wife_id"`
 }
 
 /*
@@ -352,7 +362,14 @@ func (s *SmartContract) marry(APIstub shim.ChaincodeStubInterface, args []string
 	wifeAsBytes, _ = json.Marshal(wife)
 	APIstub.PutState(args[1], wifeAsBytes)
 
-	return shim.Success(nil)
+	var card Marry_Card
+	card.Marry_Cert = marry_cert_id
+	card.Husband_ID = husband.ID
+	card.Wife_ID = wife.ID
+	MarryAsBytes, _ := json.Marshal(card)
+	APIstub.PutState(card.Marry_Cert, MarryAsBytes)
+
+	return shim.Success(MarryAsBytes)
 }
 
 func (s *SmartContract) divorce(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {

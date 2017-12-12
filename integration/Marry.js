@@ -82,7 +82,7 @@ return sdkUtils.newKeyValueStore({
         targets: targets, 
         chaincodeId: options.chaincode_id, 
         fcn: 'marry', 
-        args: ['1111111', '1111112'], 
+        args: ['110105199409026676', '110105199409026686','2017'], 
         chainId: options.channel_id, 
         txId: tx_id 
     }; 
