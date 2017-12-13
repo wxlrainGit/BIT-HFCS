@@ -47,34 +47,34 @@ type SmartContract struct {
 //human ID
 type Human struct {
 	
-	ID            string `json:"id"`
-	Sex           string `json:"sex"`
-	Name          string `json:"name"`
-	FatherID      string `json:"fatherid"`
-	MotherID      string `json:"motherid"`
-	SpouseID      string `json:"spouseid"`
-	Marry_Cert    string `json:"marry_cert_id"`
-	ChildID  [10] string `json:"childid"`
-	NewChild [10] string `json:"newchild"`
+	ID            string `json:"身份证号"`
+	Sex           string `json:"性别"`
+	Name          string `json:"姓名"`
+	FatherID      string `json:"父亲"`
+	MotherID      string `json:"母亲"`
+	SpouseID      string `json:"配偶"`
+	Marry_Cert    string `json:"结婚证书"`
+	ChildID  [10] string `json:"子女"`
+	NewChild [10] string `json:"子女出生证明"`
 }
 
 //birth cert
 type Birth struct {
 
-	BirthID      string `json:"birthid"`
-	Date         string `json:"date"`
-	Sex          string `json:"sex"`
-	FatherID     string `json:"fatherid"`
-	MotherID     string `json:"motherid"`
-	HosptialID   string `json:"hosptialid"`
+	BirthID      string `json:"出生证书编号"`
+	Date         string `json:"出生日期"`
+	Sex          string `json:"性别"`
+	FatherID     string `json:"父亲"`
+	MotherID     string `json:"母亲"`
+	HosptialID   string `json:"接生机构"`
 }
 
 //marry card
 type Marry_Card struct {
 
-	Marry_Cert     string `json:"marry_cert_id"`
-	Husband_ID     string `json:"husband_id"`
-	Wife_ID        string `json:"wife_id"`
+	Marry_Cert     string `json:"结婚证书编号"`
+	Husband_ID     string `json:"丈夫"`
+	Wife_ID        string `json:"妻子"`
 }
 
 /*
@@ -145,12 +145,35 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 	humanB.MotherID = "110105197303055386"
 	humanB.ChildID[0] = "0"
 
+	var humanC Human
+	humanC.ID       = "110105199409026656"
+	humanC.Sex      = "male"
+	humanC.Name     = "王雷雷"
+	humanC.FatherID = "110105197003025376"
+	humanC.MotherID = "110105197302055386"
+	humanC.ChildID[0] = "0"
+
+
+	var humanD Human
+	humanD.ID       = "110105199409026646"
+	humanD.Sex      = "female"
+	humanD.Name     = "张梅梅"
+	humanD.FatherID = "110105197107025376"
+	humanD.MotherID = "110105197303055386"
+	humanD.ChildID[0] = "0"
+
 	
 	humanAsBytes, _ := json.Marshal(humanA)
 	APIstub.PutState(humanA.ID, humanAsBytes)
 
 	humanBAsBytes, _ := json.Marshal(humanB)
 	APIstub.PutState(humanB.ID, humanBAsBytes)
+
+	humanCsBytes, _ := json.Marshal(humanC)
+	APIstub.PutState(humanC.ID, humanCsBytes)
+
+	humanDAsBytes, _ := json.Marshal(humanD)
+	APIstub.PutState(humanD.ID, humanDAsBytes)
 
 	return shim.Success(nil)
 }
@@ -216,7 +239,7 @@ func (s *SmartContract) createBirth(APIstub shim.ChaincodeStubInterface, args []
 	mother.NewChild[0] = hashstr[0:18]
 	motherAsBytes, _ := json.Marshal(mother)
 	APIstub.PutState(mother.ID, motherAsBytes)
-	return shim.Success(nil)
+	return shim.Success(birthAsBytes)
 }
 
 func (s *SmartContract) createHuman(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
@@ -315,7 +338,7 @@ func (s *SmartContract) createHuman(APIstub shim.ChaincodeStubInterface, args []
 	motherAsBytes, _ := json.Marshal(mother)
 	APIstub.PutState(mother.ID, motherAsBytes)
 
-	return shim.Success(nil)
+	return shim.Success(newhumanAsBytes)
 }
 
 func (s *SmartContract) marry(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
