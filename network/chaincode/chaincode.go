@@ -135,6 +135,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 	humanA.FatherID = "110105197003025376"
 	humanA.MotherID = "110105197302055386"
 	humanA.ChildID[0] = "0"
+ 	humanA.NewChild[0] = "0"
 
 
 	var humanB Human
@@ -144,6 +145,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 	humanB.FatherID = "110105197107025376"
 	humanB.MotherID = "110105197303055386"
 	humanB.ChildID[0] = "0"
+	humanB.NewChild[0] = "0"
 
 	var humanC Human
 	humanC.ID       = "110105199409026656"
@@ -152,6 +154,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 	humanC.FatherID = "110105197003025376"
 	humanC.MotherID = "110105197302055386"
 	humanC.ChildID[0] = "0"
+	humanC.NewChild[0] = "0"
 
 
 	var humanD Human
@@ -161,6 +164,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 	humanD.FatherID = "110105197107025376"
 	humanD.MotherID = "110105197303055386"
 	humanD.ChildID[0] = "0"
+	humanD.NewChild[0] = "0"
 
 	
 	humanAsBytes, _ := json.Marshal(humanA)
@@ -200,21 +204,32 @@ func (s *SmartContract) createBirth(APIstub shim.ChaincodeStubInterface, args []
 
 	//whether they are couples
 	if 0  != (strings.Compare(father.SpouseID,mother.ID)){
-		return shim.Error("{\"Error\":\"They are not couples ")
+		return shim.Error("{\"Error\":\"They are not couples }")
 	}
 	if 0  != (strings.Compare(mother.SpouseID,father.ID)){
-		return shim.Error("{\"Error\":\"They are not couples ")
+		return shim.Error("{\"Error\":\"They are not couples }")
 	}
 
-	//whether more children
-	fnum,err := strconv.Atoi(father.ChildID[0])
-	if fnum > 2{
-		return shim.Error("{\"Error\":\"They are have enough children")
+	// //whether more children
+	// fnum,err := strconv.Atoi(father.ChildID[0])
+	// if fnum > 2{
+	// 	return shim.Error("{\"Error\":\"They are have enough children}")
+	// }
+	// mnum,err := strconv.Atoi(mother.ChildID[0])
+	// if mnum > 2{
+	// 	return shim.Error("{\"Error\":\"They are have enough children}")
+	// }
+
+	//whether more Birthcerts
+	fnum,err := strconv.Atoi(father.NewChild[0])
+	if fnum > 1{
+		return shim.Error("{\"Error\":\"They are have enough children}")
 	}
 	mnum,err := strconv.Atoi(mother.ChildID[0])
-	if mnum > 2{
-		return shim.Error("{\"Error\":\"They are have enough children")
+	if mnum > 1{
+		return shim.Error("{\"Error\":\"They are have enough children}")
 	}
+
 	//create birth certs
 	var birth Birth;
 	//timestamp := time.Now().Unix()
@@ -233,10 +248,13 @@ func (s *SmartContract) createBirth(APIstub shim.ChaincodeStubInterface, args []
 	APIstub.PutState(birth.BirthID, birthAsBytes)
 
 	//connected to the parents
-	father.NewChild[0] = hashstr[0:18]
+	father.NewChild[0] = strconv.Itoa(fnum+1)
+	father.NewChild[fnum+1] = birth.BirthID
 	fatherAsBytes, _ := json.Marshal(father)
 	APIstub.PutState(father.ID, fatherAsBytes)
-	mother.NewChild[0] = hashstr[0:18]
+
+	mother.NewChild[0] = strconv.Itoa(mnum+1)
+	mother.NewChild[mnum+1] = birth.BirthID
 	motherAsBytes, _ := json.Marshal(mother)
 	APIstub.PutState(mother.ID, motherAsBytes)
 	return shim.Success(birthAsBytes)
@@ -261,35 +279,36 @@ func (s *SmartContract) createHuman(APIstub shim.ChaincodeStubInterface, args []
 	if err != nil {
 		return shim.Error("{\"Error\":\"Failed to decode JSON of: " + string(MotherAsBytes)+ "\" to Human}")
 	}
-	//get the child birth cert
-	ChildAsBytes, err := APIstub.GetState(father.NewChild[0])
-	var child Birth
-	err = json.Unmarshal(ChildAsBytes,&child)//反序列化
-	if err != nil {
-		return shim.Error("{\"Error\":\"Failed to decode JSON of: " + string(ChildAsBytes)+ "\" to Human}")
-	}
 
 	//whether they are couples
 	if 0  != (strings.Compare(father.SpouseID,mother.ID)){
-		return shim.Error("{\"Error\":\"They are not couples ")
+		return shim.Error("{\"Error\":\"They are not couples }")
 	}
 	if 0  != (strings.Compare(mother.SpouseID,father.ID)){
-		return shim.Error("{\"Error\":\"They are not couples ")
+		return shim.Error("{\"Error\":\"They are not couples }")
 	}
 
 	//whether more children
 	fnum,err := strconv.Atoi(father.ChildID[0])
 	if fnum > 2{
-		return shim.Error("{\"Error\":\"They are have enough children")
+		return shim.Error("{\"Error\":\"They are have enough children}")
 	}
 	mnum,err := strconv.Atoi(mother.ChildID[0])
 	if mnum > 2{
-		return shim.Error("{\"Error\":\"They are have enough children")
+		return shim.Error("{\"Error\":\"They are have enough children}")
 	}
 	
-	//whether the same child
-	if 0  != (strings.Compare(father.ChildID[0],mother.ChildID[0])){
-		return shim.Error("{\"Error\":\"They are not the same children")
+	//get the child birth cert
+	cnum,err := strconv.Atoi(father.NewChild[0])
+	if fnum > cnum{
+		return shim.Error("{\"Error\":\"The birth cert over time}")
+	}
+
+	ChildAsBytes, err := APIstub.GetState(father.NewChild[cnum])
+	var child Birth
+	err = json.Unmarshal(ChildAsBytes,&child)//反序列化
+	if err != nil {
+		return shim.Error("{\"Error\":\"Failed to decode JSON of birth cert}")
 	}
 
 	//create new human
@@ -299,26 +318,27 @@ func (s *SmartContract) createHuman(APIstub shim.ChaincodeStubInterface, args []
 	newhuman.FatherID = father.ID
 	newhuman.MotherID = mother.ID
 	newhuman.ChildID[0] = "0"
+	newhuman.NewChild[0] = "0"
 	
 	if 0 == (strings.Compare("1",args[1])){
 		address := father.ID[0:6]
 		date := child.Date
-		if 0 == (strings.Compare("male",child.Sex)){
-			newhuman.ID = strings.Join([]string{address,date,"123","6"},"")
+		if 0 == (strings.Compare("男",child.Sex)){
+			newhuman.ID = strings.Join([]string{address,date,"123",strconv.Itoa(rand.Intn(9))},"")
 		}
-		if 0 != (strings.Compare("male",child.Sex)){
-			newhuman.ID = strings.Join([]string{address,date,"122","5"},"")
+		if 0 != (strings.Compare("男",child.Sex)){
+			newhuman.ID = strings.Join([]string{address,date,"122",strconv.Itoa(rand.Intn(9))},"")
 		}
 	}
 
 	if 0 == (strings.Compare("2",args[1])){
 		address := mother.ID[0:6]
 		date := child.Date
-		if 0 == (strings.Compare("male",child.Sex)){
-			newhuman.ID = strings.Join([]string{address,date,"123","6"},"")
+		if 0 == (strings.Compare("男",child.Sex)){
+			newhuman.ID = strings.Join([]string{address,date,"123",strconv.Itoa(rand.Intn(9))},"")
 		}
-		if 0 != (strings.Compare("male",child.Sex)){
-			newhuman.ID = strings.Join([]string{address,date,"122","5"},"")
+		if 0 != (strings.Compare("男",child.Sex)){
+			newhuman.ID = strings.Join([]string{address,date,"122",strconv.Itoa(rand.Intn(9))},"")
 		}
 	}
 	newhumanAsBytes, _ := json.Marshal(newhuman)
@@ -351,14 +371,14 @@ func (s *SmartContract) marry(APIstub shim.ChaincodeStubInterface, args []string
 	var husband Human;
 	err = json.Unmarshal(husbandAsBytes,&husband)//反序列化
 	if err != nil {
-		return shim.Error("{\"Error\":\"Failed to decode JSON of: " + string(husbandAsBytes)+ "\" to Human}")
+		return shim.Error("{\"Error\":\"Failed to decode JSON of husband}")
 	}
 	//whether wife is exitd
 	wifeAsBytes, err := APIstub.GetState(args[1])
 	var wife Human;
 	err = json.Unmarshal(wifeAsBytes,&wife)//反序列化
 	if err != nil {
-		return shim.Error("{\"Error\":\"Failed to decode JSON of: " + string(wifeAsBytes)+ "\" to Human}")
+		return shim.Error("{\"Error\":\"Failed to decode JSON of wife}")
 	}
 	//whether married
 	if 0 != len(husband.SpouseID) {
