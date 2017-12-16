@@ -10,54 +10,6 @@ networks:
 
 services:
 
-  ca0:
-    image: hyperledger/fabric-ca${DOCKER_IMG_TAG}
-    environment:
-      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
-      - FABRIC_CA_SERVER_CA_NAME=ca0.example.com
-      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.example.com-cert.pem
-      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/d96b4da776dec6fe5dfe437ac0c77f85d787ee5cf1ace3c566b8cc3490e38294_sk
-    ports:
-      - "7054:7054"
-    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
-    volumes:
-      - ./crypto-config/peerOrganizations/org1.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
-    container_name: ca0.example.com
-    networks:
-      - byfn
-
-  ca1:
-    image: hyperledger/fabric-ca${DOCKER_IMG_TAG}
-    environment:
-      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
-      - FABRIC_CA_SERVER_CA_NAME=ca0.example.com
-      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org2.example.com-cert.pem
-      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/de343d6d70091176135ff602df54eaced5b5b391aed1dfdf53da39c0f273615c_sk
-    ports:
-      - "8054:7054"
-    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
-    volumes:
-      - ./crypto-config/peerOrganizations/org2.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
-    container_name: ca1.example.com
-    networks:
-      - byfn
-
-  ca2:
-    image: hyperledger/fabric-ca${DOCKER_IMG_TAG}
-    environment:
-      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
-      - FABRIC_CA_SERVER_CA_NAME=ca0.example.com
-      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org3.example.com-cert.pem
-      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/9fd821a1a5f6e61973315d4010666ef7cd89c96f8421a896381a1827ed918323_sk
-    ports:
-      - "9054:7054"
-    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
-    volumes:
-      - ./crypto-config/peerOrganizations/org3.example.com/ca/:/etc/hyperledger/fabric-ca-server-config
-    container_name: ca2.example.com
-    networks:
-      - byfn
-
   orderer.example.com:
     extends:
       file:   base/docker-compose-base.yaml
@@ -90,6 +42,14 @@ services:
     networks:
       - byfn
 
+  peer0.org4.example.com:
+    container_name: peer0.org4.example.com
+    extends:
+      file:  base/docker-compose-base.yaml
+      service: peer0.org4.example.com
+    networks:
+      - byfn
+
   cli:
     container_name: cli
     image: hyperledger/fabric-tools
@@ -119,6 +79,7 @@ services:
       - peer0.org1.example.com
       - peer0.org2.example.com
       - peer0.org3.example.com
+      - peer0.org4.example.com
     networks:
       - byfn
 

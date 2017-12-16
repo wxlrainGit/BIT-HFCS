@@ -46,6 +46,11 @@ setGlobals () {
 		CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt
 		CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp
 		CORE_PEER_ADDRESS=peer0.org3.example.com:7051
+	elif [ $1 -eq 3 ]; then
+		CORE_PEER_LOCALMSPID="Org4MSP"
+		CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org4.example.com/peers/peer0.org4.example.com/tls/ca.crt
+		CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org4.example.com/users/Admin@org4.example.com/msp
+		CORE_PEER_ADDRESS=peer0.org4.example.com:7051
 	fi
 
 	env |grep CORE
@@ -100,7 +105,7 @@ joinWithRetry () {
 }
 
 joinChannel () {
-	for ch in 0 1 2; do
+	for ch in 0 1 2 3; do
 		setGlobals $ch
 		joinWithRetry $ch
 		echo "===================== PEER$ch joined on the channel \"$CHANNEL_NAME\" ===================== "
@@ -153,18 +158,22 @@ echo "Updating anchor peers for org2..."
 updateAnchorPeers 1
 echo "Updating anchor peers for org3..."
 updateAnchorPeers 2
+echo "Updating anchor peers for org4..."
+updateAnchorPeers 3
 
 ## Install chaincode on Peer0/Org1, Peer0/Org2 and Peer0/Org3
-echo "Installing chaincode on org1/peer0..."
+echo "Install chaincode on org1/peer0..."
 installChaincode 0
 echo "Install chaincode on org2/peer0..."
 installChaincode 1
 echo "Install chaincode on org3/peer0..."
 installChaincode 2
+echo "Install chaincode on org4/peer0..."
+installChaincode 3
 
 #Instantiate chaincode on Peer0/Org3
-echo "Instantiating chaincode on org3/peer0..."
-instantiateChaincode 2
+echo "Instantiating chaincode on org4/peer0..."
+instantiateChaincode 3
 
 echo
 echo "========= All GOOD, network start completed =========== "

@@ -85,3 +85,9 @@ PeerOrgs:
       Count: 1
     Users:
       Count: 1
+  - Name: Org4
+    Domain: org4.example.com
+    Template:
+      Count: 1
+    Users:
+      Count: 1
