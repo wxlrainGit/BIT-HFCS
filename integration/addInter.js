@@ -81,8 +81,8 @@ return sdkUtils.newKeyValueStore({
     var request = { 
         targets: targets, 
         chaincodeId: options.chaincode_id, 
-        fcn: 'marry', 
-        args: ['110105199409026676', '110105199409026686','2017'], 
+        fcn: 'addInter', 
+        args: ['1111111', '1', '王子'], 
         chainId: options.channel_id, 
         txId: tx_id 
     }; 

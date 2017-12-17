@@ -1,4 +1,4 @@
-/*
+ /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -22,6 +22,14 @@
  * Writing Your First Blockchain Application
  */
 
+// Written by Xu Chen Hao
+// Building on windows:
+// 1. Install cygwin64 with gcc/g++
+// 2. Set system Path env to C:\cygwin64\bin
+// 3. Install golang v1.9.2 & set GOPATH env to D:\go
+// 4. mkdir D:\go\src\sacc\ & put this chaincoe in there
+// 5. go get -u --tags nopkcs11 github.com/hyperledger/fabric/core/chaincode/shim
+// 6. go build --tags nopkcs11
 package main
 
 /* Imports
@@ -106,6 +114,8 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.divorce(APIstub, args)
 	}else if function == "initLedger" {
 		return s.initLedger(APIstub)
+	}else if function == "addInter" {
+		return s.addInter(APIstub,args)
 	}
 	return shim.Error("Invalid Smart Contract function name.")
 	
@@ -452,6 +462,24 @@ func (s *SmartContract) divorce(APIstub shim.ChaincodeStubInterface, args []stri
 
 	return shim.Success(nil)
 }
+
+func (s *SmartContract) addInter(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	if len(args) != 3 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+	var humanA Human
+	humanA.ID       = args[0]
+	humanA.Sex      = args[1]
+	humanA.Name     = args[2]
+	humanA.ChildID[0] = "0"
+ 	humanA.NewChild[0] = "0"
+
+	humanAsBytes, _ := json.Marshal(humanA)
+	APIstub.PutState(humanA.ID, humanAsBytes)
+
+	return shim.Success(nil)
+}
+
 // The main function is only relevant in unit test mode. Only included here for completeness.
 func main() {
 

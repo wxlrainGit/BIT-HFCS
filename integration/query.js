@@ -69,7 +69,7 @@ return sdkUtils.newKeyValueStore({
         chaincodeId: options.chaincode_id, 
         txId: transaction_id, 
         fcn: 'queryID', 
-        args: ['1111111'] 
+        args: ['110105199409026676'] 
     }; 
      return channel.queryByChaincode(request); 
 }).then((query_responses) => { 
