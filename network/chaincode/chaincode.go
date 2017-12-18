@@ -58,9 +58,12 @@ type Human struct {
 	ID            string `json:"身份证号"`
 	Sex           string `json:"性别"`
 	Name          string `json:"姓名"`
-	FatherID      string `json:"父亲"`
-	MotherID      string `json:"母亲"`
-	SpouseID      string `json:"配偶"`
+	FatherName    string `json:"父亲姓名"`
+	FatherID      string `json:"父亲身份证号"`
+	MotherName    string `json:"母亲姓名"`
+	MotherID      string `json:"母亲身份证号"`
+	SpouseName    string `json:"配偶姓名"`
+	SpouseID      string `json:"配偶身份证号"`
 	Marry_Cert    string `json:"结婚证书"`
 	ChildID  [10] string `json:"子女"`
 	NewChild [10] string `json:"子女出生证明"`
@@ -72,17 +75,23 @@ type Birth struct {
 	BirthID      string `json:"出生证书编号"`
 	Date         string `json:"出生日期"`
 	Sex          string `json:"性别"`
-	FatherID     string `json:"父亲"`
-	MotherID     string `json:"母亲"`
+	FatherName   string `json:"父亲姓名"`
+	FatherID     string `json:"父亲身份证号"`
+	MotherName   string `json:"母亲姓名"`
+	MotherID     string `json:"母亲身份证号"`
 	HosptialID   string `json:"接生机构"`
 }
 
 //marry card
 type Marry_Card struct {
 
-	Marry_Cert     string `json:"结婚证书编号"`
-	Husband_ID     string `json:"丈夫"`
-	Wife_ID        string `json:"妻子"`
+	Marry_Cert     string `json:"证书编号"`
+	State          string `json:"状态"`
+	Husband_Name   string `json:"丈夫姓名"`
+	Husband_ID     string `json:"丈夫身份证号"`
+	Wife_Name      string `json:"妻子姓名"`
+	Wife_ID        string `json:"妻子身份证号"`
+	Date           string `json:"登记日期"`
 }
 
 /*
@@ -140,7 +149,7 @@ func (s *SmartContract) queryID(APIstub shim.ChaincodeStubInterface, args []stri
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
 	var humanA Human
 	humanA.ID       = "110105199409026676"
-	humanA.Sex      = "male"
+	humanA.Sex      = "男"
 	humanA.Name     = "李雷雷"
 	humanA.FatherID = "110105197003025376"
 	humanA.MotherID = "110105197302055386"
@@ -150,7 +159,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 
 	var humanB Human
 	humanB.ID       = "110105199409026686"
-	humanB.Sex      = "female"
+	humanB.Sex      = "女"
 	humanB.Name     = "韩梅梅"
 	humanB.FatherID = "110105197107025376"
 	humanB.MotherID = "110105197303055386"
@@ -159,7 +168,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 
 	var humanC Human
 	humanC.ID       = "110105199409026656"
-	humanC.Sex      = "male"
+	humanC.Sex      = "男"
 	humanC.Name     = "王雷雷"
 	humanC.FatherID = "110105197003025376"
 	humanC.MotherID = "110105197302055386"
@@ -169,7 +178,7 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 
 	var humanD Human
 	humanD.ID       = "110105199409026646"
-	humanD.Sex      = "female"
+	humanD.Sex      = "女"
 	humanD.Name     = "张梅梅"
 	humanD.FatherID = "110105197107025376"
 	humanD.MotherID = "110105197303055386"
@@ -252,7 +261,9 @@ func (s *SmartContract) createBirth(APIstub shim.ChaincodeStubInterface, args []
 	birth.Sex      = args[2]
 	birth.Date     = args[3]
 	birth.FatherID = father.ID
+	birth.FatherName = father.Name
 	birth.MotherID = mother.ID
+	birth.MotherName = mother.Name
 	birth.HosptialID = args[4]
 	birthAsBytes, _ := json.Marshal(birth)
 	APIstub.PutState(birth.BirthID, birthAsBytes)
@@ -326,7 +337,9 @@ func (s *SmartContract) createHuman(APIstub shim.ChaincodeStubInterface, args []
 	newhuman.Sex      = child.Sex
 	newhuman.Name     = args[2]
 	newhuman.FatherID = father.ID
+	newhuman.FatherName = father.Name
 	newhuman.MotherID = mother.ID
+	newhuman.MotherName = mother.Name
 	newhuman.ChildID[0] = "0"
 	newhuman.NewChild[0] = "0"
 	
@@ -402,23 +415,29 @@ func (s *SmartContract) marry(APIstub shim.ChaincodeStubInterface, args []string
 	rd := strconv.Itoa(rand.Intn(100))
 	str := strings.Join([]string{args[2],rd},"")
 	hashstr := hex.EncodeToString([]byte(str))
-	marry_cert_id  := strings.Join([]string{"J110101",args[2],hashstr[0:6]},"-")
+	marry_cert_id  := strings.Join([]string{"J110101",args[2][0:4],hashstr[0:6]},"-")
 	
 	//become husband
 	husband.SpouseID = wife.ID
+	husband.SpouseName = wife.Name
 	husband.Marry_Cert = marry_cert_id
 	husbandAsBytes, _ = json.Marshal(husband)
 	APIstub.PutState(args[0], husbandAsBytes)
 	//become wife
 	wife.SpouseID = husband.ID
+	wife.SpouseName = husband.Name
 	wife.Marry_Cert = marry_cert_id
 	wifeAsBytes, _ = json.Marshal(wife)
 	APIstub.PutState(args[1], wifeAsBytes)
 
 	var card Marry_Card
 	card.Marry_Cert = marry_cert_id
+	card.State = "结婚"
 	card.Husband_ID = husband.ID
+	card.Husband_Name = husband.Name
 	card.Wife_ID = wife.ID
+	card.Wife_Name = wife.Name
+	card.Date = strings.Join([]string{args[2][0:4],args[2][4:6],args[2][5:7]},"-")
 	MarryAsBytes, _ := json.Marshal(card)
 	APIstub.PutState(card.Marry_Cert, MarryAsBytes)
 
@@ -435,14 +454,14 @@ func (s *SmartContract) divorce(APIstub shim.ChaincodeStubInterface, args []stri
 	var husband Human;
 	err = json.Unmarshal(husbandAsBytes,&husband)//反序列化
 	if err != nil {
-		return shim.Error("{\"Error\":\"Failed to decode JSON of: " + string(husbandAsBytes)+ "\" to Human}")
+		return shim.Error("{\"Error\":\"Failed to decode JSON of husband}")
 	}
 	//whether wife is exitd
 	wifeAsBytes, err := APIstub.GetState(args[1])
 	var wife Human;
 	err = json.Unmarshal(wifeAsBytes,&wife)//反序列化
 	if err != nil {
-		return shim.Error("{\"Error\":\"Failed to decode JSON of: " + string(wifeAsBytes)+ "\" to Human}")
+		return shim.Error("{\"Error\":\"Failed to decode JSON of wife}")
 	}
 	//whether they are couples
 	if 0  != (strings.Compare(husband.SpouseID,wife.ID)){
@@ -451,14 +470,30 @@ func (s *SmartContract) divorce(APIstub shim.ChaincodeStubInterface, args []stri
 	if 0  != (strings.Compare(wife.SpouseID,husband.ID)){
 		return shim.Error("{\"Error\":\"They are not couples ")
 	}
+
+	//change Marry card
+	var card Marry_Card
+	cardAsBytes, err := APIstub.GetState(husband.Marry_Cert)
+	err = json.Unmarshal(cardAsBytes,&card)//反序列化
+	if err != nil {
+		return shim.Error("{\"Error\":\"Failed to decode JSON of Marry_Card}")
+	}
+	card.State = "离婚"
+	cardAsBytes, _ = json.Marshal(card)
+	APIstub.PutState(husband.Marry_Cert, cardAsBytes)
+
+
 	//change husband spouse
 	husband.SpouseID = ""
+	husband.Marry_Cert = ""
 	husbandAsBytes, _ = json.Marshal(husband)
 	APIstub.PutState(args[0], husbandAsBytes)
 	//change wife spouse
 	wife.SpouseID = ""
+	wife.Marry_Cert = ""
 	wifeAsBytes, _ = json.Marshal(wife)
 	APIstub.PutState(args[1], wifeAsBytes)
+
 
 	return shim.Success(nil)
 }
