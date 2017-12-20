@@ -58,14 +58,17 @@ type Human struct {
 	ID            string `json:"身份证号"`
 	Sex           string `json:"性别"`
 	Name          string `json:"姓名"`
+	Date          string `json:"出生日期"`
 	FatherName    string `json:"父亲姓名"`
 	FatherID      string `json:"父亲身份证号"`
 	MotherName    string `json:"母亲姓名"`
 	MotherID      string `json:"母亲身份证号"`
+	MarryState    string `json:"婚姻状态"`
 	SpouseName    string `json:"配偶姓名"`
 	SpouseID      string `json:"配偶身份证号"`
 	Marry_Cert    string `json:"结婚证书"`
-	ChildID  [10] string `json:"子女"`
+	ChildID  [10] string `json:"子女身份证号"`
+	ChildName[10] string `json:"子女姓名"`
 	NewChild [10] string `json:"子女出生证明"`
 }
 
@@ -94,6 +97,41 @@ type Marry_Card struct {
 	Date           string `json:"登记日期"`
 }
 
+//marry check 
+type Marry_Check struct{
+	CheckID  		 string `json:"审查编号"`
+	Husband_Name     string `json:"丈夫姓名"`
+	Husband_ID       string `json:"丈夫身份证号"`
+	HusbandState     string `json:"丈夫婚姻状态"`
+	Wife_Name        string `json:"妻子姓名"`
+	Wife_ID          string `json:"妻子身份证号"`
+	WifeState        string `json:"妻子婚姻状态"`
+	Check [6]        string `json:"判断结果"`
+}
+
+type Creat_Check struct{
+	CheckID            string `json:"审查编号"`
+	FatherName         string `json:"父亲姓名"`
+	FatherID           string `json:"父亲身份证号"`
+	MotherName         string `json:"母亲姓名"`
+	MotherID           string `json:"母亲身份证号"`
+	Marry_Cert         string `json:"父母结婚证书编号"`
+	BirthID            string `json:"出生证书编号"`
+	BirthDate          string `json:"出生日期"`
+	Sex                string `json:"性别"`
+	HosptialID         string `json:"接生机构"`
+	Check [9]          string `json:"判断结果"`
+}
+
+type Divorce_Check struct{
+	CheckID  		 string `json:"审查编号"`
+	Husband_Name     string `json:"丈夫姓名"`
+	Husband_ID       string `json:"丈夫身份证号"`
+	Wife_Name        string `json:"妻子姓名"`
+	Wife_ID          string `json:"妻子身份证号"`
+	Marry_Cert       string `json:"结婚证书编号"`
+	Check [5]        string `json:"判断结果"`
+}
 /*
  * The Init method is called when the Smart Contract "fabcar" is instantiated by the blockchain network
  * Best practice is to have any Ledger initialization in separate function -- see initLedger()
@@ -119,8 +157,12 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.createHuman(APIstub, args)
 	}else if function == "marry" {
 		return s.marry(APIstub, args)
-	}else if function == "divorce" {
-		return s.divorce(APIstub, args)
+	}else if function == "marryCheck" {
+		return s.marryCheck(APIstub, args)
+	}else if function == "divorceCheck" {
+		return s.divorceCheck(APIstub, args)
+	}else if function == "createCheck" {
+		return s.createCheck(APIstub, args)
 	}else if function == "initLedger" {
 		return s.initLedger(APIstub)
 	}else if function == "addInter" {
@@ -229,17 +271,6 @@ func (s *SmartContract) createBirth(APIstub shim.ChaincodeStubInterface, args []
 		return shim.Error("{\"Error\":\"They are not couples }")
 	}
 
-	// //whether more children
-	// fnum,err := strconv.Atoi(father.ChildID[0])
-	// if fnum > 2{
-	// 	return shim.Error("{\"Error\":\"They are have enough children}")
-	// }
-	// mnum,err := strconv.Atoi(mother.ChildID[0])
-	// if mnum > 2{
-	// 	return shim.Error("{\"Error\":\"They are have enough children}")
-	// }
-
-	//whether more Birthcerts
 	fnum,err := strconv.Atoi(father.NewChild[0])
 	if fnum > 1{
 		return shim.Error("{\"Error\":\"They are have enough children}")
@@ -280,6 +311,102 @@ func (s *SmartContract) createBirth(APIstub shim.ChaincodeStubInterface, args []
 	APIstub.PutState(mother.ID, motherAsBytes)
 	return shim.Success(birthAsBytes)
 }
+
+func (s *SmartContract) createCheck(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+
+	//3 paramtes father or motherID ,1flow father 2 flow mother,name
+	if len(args) != 3 {
+		return shim.Error("Incorrect number of arguments. Expecting 5")
+	}
+	var check Creat_Check
+
+	//whether father is sxisted
+	FatherAsBytes, err := APIstub.GetState(args[0])
+	var father Human;
+	err = json.Unmarshal(FatherAsBytes,&father)//反序列化
+	if err != nil {
+		check.Check[0] = "0"
+		check.Check[1] = "0"
+		check.FatherName   = "无"      
+		check.FatherID     = "无"
+	}else{
+		check.Check[0] = "1"
+		check.Check[1] = "1"
+		check.FatherName   = father.Name      
+		check.FatherID     = father.ID 
+	}
+	//whether mother is sxisted
+	MotherAsBytes, err := APIstub.GetState(father.SpouseID)
+	var mother Human;
+	err = json.Unmarshal(MotherAsBytes,&mother)//反序列化
+	if err != nil {
+		check.Check[2] = "0"
+		check.Check[3] = "0"
+		check.MotherName   = "无"      
+		check.MotherID     = "无" 
+	}else{
+		check.Check[2] = "1"
+		check.Check[3] = "1"
+		check.MotherName   = mother.Name      
+		check.MotherID     = mother.ID 
+	}
+
+	//whether they are couples
+	//whether married
+	if 0 == len(father.SpouseID) {
+		check.Check[4] = "0"
+		check.Marry_Cert = "不是夫妻"
+	}else if 0 == len(mother.SpouseID) {
+		check.Check[4] = "0"
+		check.Marry_Cert = "不是夫妻"
+	}else if 0  != (strings.Compare(father.Marry_Cert,mother.Marry_Cert)){
+		check.Check[4] = "0"
+		check.Marry_Cert = "不是夫妻"
+	}else {
+	check.Check[4] = "1"
+	check.Marry_Cert = father.Marry_Cert
+	}
+	// //get the child birth cert
+	 cnum,err := strconv.Atoi(father.NewChild[0])
+	// if fnum > cnum{
+	// 	check.Check[5] = "0"
+	// 	check.Check[6] = "0"
+	// 	check.Check[7] = "0"
+	// 	check.Check[8] = "0"
+	// }else{
+
+	ChildAsBytes, err := APIstub.GetState(father.NewChild[cnum])
+	var child Birth
+	err = json.Unmarshal(ChildAsBytes,&child)//反序列化
+	if err != nil {
+		check.Check[5] = "0"
+		check.Check[6] = "0"
+		check.Check[7] = "0"
+		check.Check[8] = "0"
+		check.BirthID      = "无"    
+		check.BirthDate    = "无"      
+		check.Sex          = "无"      
+		check.HosptialID   = "无"
+	}else{
+		check.Check[5] = "1"
+		check.Check[6] = "1"
+		check.Check[7] = "1"
+		check.Check[8] = "1"
+		check.BirthID      = child.BirthID     
+		check.BirthDate    = child.Date      
+		check.Sex          = child.Sex      
+		check.HosptialID   = child.HosptialID
+	}
+
+		str := strings.Join([]string{father.ID,mother.ID},"")
+		hashstr := hex.EncodeToString([]byte(str))
+		check.CheckID  =  hashstr[0:18]
+		checkAsBytes, _ := json.Marshal(check)
+	    APIstub.PutState(check.CheckID, checkAsBytes)    
+
+		return shim.Success(checkAsBytes)
+	}
+
 
 func (s *SmartContract) createHuman(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	//3 paramtes father or motherID ,1flow father 2 flow mother,name
@@ -336,6 +463,8 @@ func (s *SmartContract) createHuman(APIstub shim.ChaincodeStubInterface, args []
 	var newhuman Human
 	newhuman.Sex      = child.Sex
 	newhuman.Name     = args[2]
+	newhuman.Date     = child.Date
+	newhuman.MarryState = "未婚"
 	newhuman.FatherID = father.ID
 	newhuman.FatherName = father.Name
 	newhuman.MotherID = mother.ID
@@ -372,16 +501,145 @@ func (s *SmartContract) createHuman(APIstub shim.ChaincodeStubInterface, args []
 	fchild := strconv.Itoa(fnum+1)
 	father.ChildID[0] = fchild
 	father.ChildID[fnum+1] = newhuman.ID
+	father.ChildName[fnum+1] = newhuman.Name
 	fatherAsBytes, _ := json.Marshal(father)
 	APIstub.PutState(father.ID, fatherAsBytes)
 	//become mother
 	mchild := strconv.Itoa(mnum+1)
 	mother.ChildID[0] = mchild
 	mother.ChildID[mnum+1] = newhuman.ID
+	mother.ChildName[mnum+1] = newhuman.Name
 	motherAsBytes, _ := json.Marshal(mother)
 	APIstub.PutState(mother.ID, motherAsBytes)
 
 	return shim.Success(newhumanAsBytes)
+}
+
+func (s *SmartContract) marryCheck(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	//2paramtes husbandID ,wifeID
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	var check Marry_Check
+	//whether husband is exitd
+	husbandAsBytes, err := APIstub.GetState(args[0])
+	var husband Human;
+	err = json.Unmarshal(husbandAsBytes,&husband)//反序列化
+	if err != nil {
+		check.Check[0] = "0"
+		check.Check[1] = "0"
+		check.Check[2] = "0"
+		check.Husband_Name = "无"    
+	    check.Husband_ID   = "无"
+	}else{
+		check.Check[0] = "1"
+		check.Check[1] = "1"
+		check.Husband_Name = husband.Name    
+		check.Husband_ID   = husband.ID 
+	}
+	//whether wife is exitd
+	wifeAsBytes, err := APIstub.GetState(args[1])
+	var wife Human;
+	err = json.Unmarshal(wifeAsBytes,&wife)//反序列化
+	if err != nil {
+		check.Check[3] = "0"
+		check.Check[4] = "0"
+		check.Check[5] = "0"
+		check.Wife_Name    = "无"   
+		check.Wife_ID      = "无"   
+	}else{
+		check.Check[3] = "1"
+		check.Check[4] = "1"
+		check.Wife_Name    = wife.Name    
+		check.Wife_ID      = wife.ID  
+	}
+	//whether married
+	if 0 != len(husband.SpouseID) {
+		check.Check[2] = "0"
+		check.HusbandState = "已婚"
+	}else{
+		check.Check[2] = "1"
+		check.HusbandState = "未婚"
+	}
+	if 0 != len(wife.SpouseID) {
+		check.Check[5] = "0"
+		check.WifeState = "已婚"
+	}else{
+		check.Check[5] = "1"
+		check.WifeState = "未婚"
+	}
+
+	str := strings.Join([]string{husband.ID,wife.ID},"")
+	hashstr := hex.EncodeToString([]byte(str))
+
+	check.CheckID      = hashstr[0:18]
+	      
+	  
+  
+	
+
+	checkAsBytes, _ := json.Marshal(check)
+	APIstub.PutState(check.CheckID, checkAsBytes)
+
+	return shim.Success(checkAsBytes)
+}
+
+func (s *SmartContract) divorceCheck(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	//3paramtes husbandID ,wifeID
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	var check Divorce_Check
+	//whether husband is exitd
+	husbandAsBytes, err := APIstub.GetState(args[0])
+	var husband Human;
+	err = json.Unmarshal(husbandAsBytes,&husband)//反序列化
+	if err != nil {
+		check.Check[0] = "0"
+		check.Check[1] = "0"
+	}
+	check.Check[0] = "1"
+	check.Check[1] = "1"
+	//whether wife is exitd
+	wifeAsBytes, err := APIstub.GetState(args[1])
+	var wife Human;
+	err = json.Unmarshal(wifeAsBytes,&wife)//反序列化
+	if err != nil {
+		check.Check[2] = "0"
+		check.Check[3] = "0"
+	}
+	check.Check[2] = "1"
+	check.Check[3] = "1"
+	//whether married
+	if 0 == len(husband.SpouseID) {
+		check.Check[4] = "0"
+		check.Marry_Cert = "不是夫妻"
+	}else if 0 == len(wife.SpouseID) {
+		check.Check[4] = "0"
+		check.Marry_Cert = "不是夫妻"
+	}else if 0  != (strings.Compare(husband.SpouseID,wife.SpouseID)){
+		check.Check[4] = "0"
+		check.Marry_Cert = "不是夫妻"
+	}else {
+	check.Check[4] = "1"
+	check.Marry_Cert = husband.Marry_Cert
+	}
+
+	str := strings.Join([]string{husband.ID,wife.ID},"")
+	hashstr := hex.EncodeToString([]byte(str))
+
+	check.CheckID      = hashstr[0:18]
+	check.Husband_Name = husband.Name    
+	check.Husband_ID   = husband.ID       
+	check.Wife_Name    = wife.Name    
+	check.Wife_ID      = wife.ID    
+	 
+	checkAsBytes, _ := json.Marshal(check)
+	APIstub.PutState(check.CheckID, checkAsBytes)
+
+	return shim.Success(checkAsBytes)
 }
 
 func (s *SmartContract) marry(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
@@ -420,12 +678,14 @@ func (s *SmartContract) marry(APIstub shim.ChaincodeStubInterface, args []string
 	//become husband
 	husband.SpouseID = wife.ID
 	husband.SpouseName = wife.Name
+	husband.MarryState = "已婚"
 	husband.Marry_Cert = marry_cert_id
 	husbandAsBytes, _ = json.Marshal(husband)
 	APIstub.PutState(args[0], husbandAsBytes)
 	//become wife
 	wife.SpouseID = husband.ID
 	wife.SpouseName = husband.Name
+	wife.MarryState = "已婚"
 	wife.Marry_Cert = marry_cert_id
 	wifeAsBytes, _ = json.Marshal(wife)
 	APIstub.PutState(args[1], wifeAsBytes)
