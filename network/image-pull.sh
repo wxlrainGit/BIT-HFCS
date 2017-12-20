@@ -1,10 +1,10 @@
 #!/bin/bash
 
-export VERSION=1.0.4
-export ARCH=$(echo "$(uname -s|tr '[:upper:]' '[:lower:]'|sed 's/mingw64_nt.*/windows/')-$(uname -m | sed 's/x86_64/amd64/g')" | awk '{print tolower($0)}')
+VERSION=1.0.4
+ARCH=$(echo "$(uname -s|tr '[:upper:]' '[:lower:]'|sed 's/mingw64_nt.*/windows/')-$(uname -m | sed 's/x86_64/amd64/g')" | awk '{print tolower($0)}')
 #Set MARCH variable i.e ppc64le,s390x,x86_64,i386
 MARCH=`uname -m`
-FABRIC_TAG:="$MARCH-$VERSION"
+FABRIC_TAG="$MARCH-$VERSION"
 
 dockerFabricPull() {
   local FABRIC_TAG=$1
@@ -18,4 +18,3 @@ dockerFabricPull() {
 
 echo "===> Pulling fabric Images"
 dockerFabricPull ${FABRIC_TAG}
-
