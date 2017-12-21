@@ -107,6 +107,7 @@ type Marry_Check struct{
 	Wife_ID          string `json:"妻子身份证号"`
 	WifeState        string `json:"妻子婚姻状态"`
 	Check [6]        string `json:"判断结果"`
+	CheckStae        string `json:"审查表状态"`
 }
 
 type Creat_Check struct{
@@ -121,6 +122,7 @@ type Creat_Check struct{
 	Sex                string `json:"性别"`
 	HosptialID         string `json:"接生机构"`
 	Check [9]          string `json:"判断结果"`
+	CheckStae          string `json:"审查表状态"`
 }
 
 type Divorce_Check struct{
@@ -131,6 +133,7 @@ type Divorce_Check struct{
 	Wife_ID          string `json:"妻子身份证号"`
 	Marry_Cert       string `json:"结婚证书编号"`
 	Check [5]        string `json:"判断结果"`
+	CheckStae        string `json:"审查表状态"`
 }
 
 type R_Err struct{
@@ -595,6 +598,7 @@ func (s *SmartContract) createCheck(APIstub shim.ChaincodeStubInterface, args []
 		check.Sex          = child.Sex      
 		check.HosptialID   = child.HosptialID
 	}
+	    check.CheckStae = "0"
 		check.CheckID  =  strconv.FormatInt(time.Now().Unix(),10)
 		checkAsBytes, _ := json.Marshal(check)
 	    APIstub.PutState(check.CheckID, checkAsBytes)    
@@ -621,7 +625,11 @@ func (s *SmartContract) createHuman(APIstub shim.ChaincodeStubInterface, args []
 		reAsBytes, _ := json.Marshal(re)    
 		return shim.Success(reAsBytes)
 	}
-	
+	if 0 == strings.Compare(check.CheckStae,"1"){
+			re.Reason = "申请表已处理"
+		    reAsBytes, _ := json.Marshal(re)    
+		    return shim.Success(reAsBytes)
+	}
 	for i := 0; i < 9; i++{
 		if 0 != strings.Compare(check.Check[i],"1"){
 			re.Reason = "条件不符"
@@ -707,6 +715,12 @@ func (s *SmartContract) createHuman(APIstub shim.ChaincodeStubInterface, args []
 	newhumanAsBytes, _ := json.Marshal(newhuman)
 	APIstub.PutState(newhuman.ID, newhumanAsBytes)
 
+	//change check state
+	check.CheckStae = "1";
+	CheckAsBytes , _:= json.Marshal(check)
+	APIstub.PutState(check.CheckID, CheckAsBytes)
+
+
 	//become father
 	fchild := strconv.Itoa(fnum+1)
 	father.ChildID[0] = fchild
@@ -784,6 +798,7 @@ func (s *SmartContract) marryCheck(APIstub shim.ChaincodeStubInterface, args []s
 		check.WifeState = "未婚"
 	}
 
+	check.CheckStae = "0"
 	check.CheckID      =  strconv.FormatInt(time.Now().Unix(),10)
 	checkAsBytes, _ := json.Marshal(check)
 	APIstub.PutState(check.CheckID, checkAsBytes)
@@ -843,6 +858,7 @@ func (s *SmartContract) divorceCheck(APIstub shim.ChaincodeStubInterface, args [
 	check.Wife_Name    = wife.Name    
 	check.Wife_ID      = wife.ID    
 	 
+	check.CheckStae = "0"
 	checkAsBytes, _ := json.Marshal(check)
 	APIstub.PutState(check.CheckID, checkAsBytes)
 
@@ -864,6 +880,11 @@ func (s *SmartContract) marry(APIstub shim.ChaincodeStubInterface, args []string
 	err = json.Unmarshal(checkAsBytes,&check)//反序列化
 	if err != nil {
 		    re.Reason = "申请表不存在"
+		    reAsBytes, _ := json.Marshal(re)    
+		    return shim.Success(reAsBytes)
+	}
+	if 0 == strings.Compare(check.CheckStae,"1"){
+			re.Reason = "申请表已处理"
 		    reAsBytes, _ := json.Marshal(re)    
 		    return shim.Success(reAsBytes)
 	}
@@ -901,8 +922,13 @@ func (s *SmartContract) marry(APIstub shim.ChaincodeStubInterface, args []string
 		    return shim.Success(reAsBytes)
 	}
 
+	//change check state
+	check.CheckStae = "1";
+	CheckAsBytes , _:= json.Marshal(check)
+	APIstub.PutState(check.CheckID, CheckAsBytes)
+
 	//generate marry id
-	marry_cert_id  := strings.Join([]string{"J110101",args[2][0:4],strconv.FormatInt(time.Now().Unix(),10)[0:6]},"-")
+	marry_cert_id  := strings.Join([]string{"J110101",args[2][0:4],strconv.FormatInt(time.Now().Unix(),10)[4:10]},"-")
 	
 	//become husband
 	husband.SpouseID = wife.ID
@@ -948,6 +974,11 @@ func (s *SmartContract) divorce(APIstub shim.ChaincodeStubInterface, args []stri
 	err = json.Unmarshal(checkAsBytes,&check)//反序列化
 	if err != nil {
 		    re.Reason = "申请表不存在"
+		    reAsBytes, _ := json.Marshal(re)    
+		    return shim.Success(reAsBytes)
+	}
+	if 0 == strings.Compare(check.CheckStae,"1"){
+			re.Reason = "申请表已处理"
 		    reAsBytes, _ := json.Marshal(re)    
 		    return shim.Success(reAsBytes)
 	}
@@ -999,6 +1030,10 @@ func (s *SmartContract) divorce(APIstub shim.ChaincodeStubInterface, args []stri
 	cardAsBytes, _ = json.Marshal(card)
 	APIstub.PutState(husband.Marry_Cert, cardAsBytes)
 
+	//change divorce checkState
+	check.CheckStae = "1";
+	CheckAsBytes, _ := json.Marshal(check)
+	APIstub.PutState(check.CheckID, CheckAsBytes)
 
 	//change husband spouse
 	husband.SpouseID = "无"
