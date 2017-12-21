@@ -38,7 +38,7 @@ package main
  */
 import (
 	"encoding/json"
-	"encoding/hex"
+	"time"
 	"fmt"
 	"strings"
 	"math/rand"
@@ -482,11 +482,7 @@ func (s *SmartContract) createBirth(APIstub shim.ChaincodeStubInterface, args []
 	var birth Birth;
 	//timestamp := time.Now().Unix()
 	//tm := time.Unix(timestamp, 0)
-	rd := strconv.Itoa(rand.Intn(100))
-	str := strings.Join([]string{args[3],rd},"")
-	hashstr := hex.EncodeToString([]byte(str))
-
-	birth.BirthID  = hashstr[0:18]
+	birth.BirthID  = strconv.FormatInt(time.Now().Unix(),10)
 	birth.Sex      = args[2]
 	birth.Date     = args[3]
 	birth.FatherID = father.ID
@@ -599,10 +595,7 @@ func (s *SmartContract) createCheck(APIstub shim.ChaincodeStubInterface, args []
 		check.Sex          = child.Sex      
 		check.HosptialID   = child.HosptialID
 	}
-
-		str := strings.Join([]string{father.ID,mother.ID},"")
-		hashstr := hex.EncodeToString([]byte(str))
-		check.CheckID  =  hashstr[0:18]
+		check.CheckID  =  strconv.FormatInt(time.Now().Unix(),10)
 		checkAsBytes, _ := json.Marshal(check)
 	    APIstub.PutState(check.CheckID, checkAsBytes)    
 
@@ -791,10 +784,7 @@ func (s *SmartContract) marryCheck(APIstub shim.ChaincodeStubInterface, args []s
 		check.WifeState = "未婚"
 	}
 
-	str := strings.Join([]string{husband.ID,wife.ID},"")
-	hashstr := hex.EncodeToString([]byte(str))
-
-	check.CheckID      = hashstr[0:18]
+	check.CheckID      =  strconv.FormatInt(time.Now().Unix(),10)
 	checkAsBytes, _ := json.Marshal(check)
 	APIstub.PutState(check.CheckID, checkAsBytes)
 
@@ -847,10 +837,7 @@ func (s *SmartContract) divorceCheck(APIstub shim.ChaincodeStubInterface, args [
 	check.Marry_Cert = husband.Marry_Cert
 	}
 
-	str := strings.Join([]string{husband.ID,wife.ID},"")
-	hashstr := hex.EncodeToString([]byte(str))
-
-	check.CheckID      = hashstr[0:18]
+	check.CheckID      =  strconv.FormatInt(time.Now().Unix(),10)
 	check.Husband_Name = husband.Name    
 	check.Husband_ID   = husband.ID       
 	check.Wife_Name    = wife.Name    
@@ -915,10 +902,7 @@ func (s *SmartContract) marry(APIstub shim.ChaincodeStubInterface, args []string
 	}
 
 	//generate marry id
-	rd := strconv.Itoa(rand.Intn(100))
-	str := strings.Join([]string{args[2],rd},"")
-	hashstr := hex.EncodeToString([]byte(str))
-	marry_cert_id  := strings.Join([]string{"J110101",args[2][0:4],hashstr[0:6]},"-")
+	marry_cert_id  := strings.Join([]string{"J110101",args[2][0:4],strconv.FormatInt(time.Now().Unix(),10)[0:6]},"-")
 	
 	//become husband
 	husband.SpouseID = wife.ID
