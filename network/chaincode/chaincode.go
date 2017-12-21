@@ -433,10 +433,10 @@ func (s *SmartContract) queryID(APIstub shim.ChaincodeStubInterface, args []stri
 
 
 func (s *SmartContract) createBirth(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
-	//5 paramtes father,mother,childsex,birhdate 20171223,hospitalID，Place,weight,health
+	//9 paramtes father,mother,childsex,birhdate 20171223,hospitalID，Place,weight,health,name
 	var re R_Err
 
-	if len(args) !=  8{
+	if len(args) !=  9{
 		re.Reason = "参数数量不正确"
 		reAsBytes, _ := json.Marshal(re)    
 		return shim.Success(reAsBytes)
@@ -500,6 +500,7 @@ func (s *SmartContract) createBirth(APIstub shim.ChaincodeStubInterface, args []
 	birth.Place = args[5]
 	birth.Weight = args[6]
 	birth.Health = args[7]
+	birth.BirthName = args[8]
 	birthAsBytes, _ := json.Marshal(birth)
 	APIstub.PutState(birth.BirthID, birthAsBytes)
 
