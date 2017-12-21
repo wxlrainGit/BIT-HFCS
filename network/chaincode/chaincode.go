@@ -74,10 +74,14 @@ type Human struct {
 
 //birth cert
 type Birth struct {
-
+    
+    BirthName    string `json:"新生儿姓名"`
 	BirthID      string `json:"出生证书编号"`
 	Date         string `json:"出生日期"`
 	Sex          string `json:"性别"`
+	Weight       string `json:"体重"`
+	Health       string `json:"健康情况"`
+	Place        string `json:"出生地"`
 	FatherName   string `json:"父亲姓名"`
 	FatherID     string `json:"父亲身份证号"`
 	MotherName   string `json:"母亲姓名"`
@@ -429,10 +433,10 @@ func (s *SmartContract) queryID(APIstub shim.ChaincodeStubInterface, args []stri
 
 
 func (s *SmartContract) createBirth(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
-	//5 paramtes father,mother,childsex,birhdate 20171223,hospitalID
+	//5 paramtes father,mother,childsex,birhdate 20171223,hospitalID，Place,weight,health
 	var re R_Err
 
-	if len(args) != 5 {
+	if len(args) !=  8{
 		re.Reason = "参数数量不正确"
 		reAsBytes, _ := json.Marshal(re)    
 		return shim.Success(reAsBytes)
@@ -493,6 +497,9 @@ func (s *SmartContract) createBirth(APIstub shim.ChaincodeStubInterface, args []
 	birth.MotherID = mother.ID
 	birth.MotherName = mother.Name
 	birth.HosptialID = args[4]
+	birth.Place = args[5]
+	birth.Weight = args[6]
+	birth.Health = args[7]
 	birthAsBytes, _ := json.Marshal(birth)
 	APIstub.PutState(birth.BirthID, birthAsBytes)
 
