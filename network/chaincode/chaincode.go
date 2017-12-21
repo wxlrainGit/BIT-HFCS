@@ -132,6 +132,10 @@ type Divorce_Check struct{
 	Marry_Cert       string `json:"结婚证书编号"`
 	Check [5]        string `json:"判断结果"`
 }
+
+type R_Err struct{
+	Reason  		 string `json:"原因"`
+}
 /*
  * The Init method is called when the Smart Contract "fabcar" is instantiated by the blockchain network
  * Best practice is to have any Ledger initialization in separate function -- see initLedger()
@@ -400,16 +404,21 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 }	
 
 func (s *SmartContract) queryID(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	var re R_Err
 
 	if len(args) != 1 {
-		return shim.Error("Incorrect number of arguments. Expecting 1")
+		re.Reason = "参数数量不正确"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
 	}
 
 	humanAsBytes, err := APIstub.GetState(args[0])
 	var human Human;
 	err = json.Unmarshal(humanAsBytes,&human)//反序列化
 	if err != nil {
-		return shim.Error("{\"Error\":\"Failed to decode JSON of: " + string(humanAsBytes)+ "\" to Human}")
+		re.Reason = "此人不存在"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
 	}
    return shim.Success(humanAsBytes)
 	
@@ -418,39 +427,55 @@ func (s *SmartContract) queryID(APIstub shim.ChaincodeStubInterface, args []stri
 
 func (s *SmartContract) createBirth(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	//5 paramtes father,mother,childsex,birhdate 20171223,hospitalID
+	var re R_Err
+
 	if len(args) != 5 {
-		return shim.Error("Incorrect number of arguments. Expecting 5")
+		re.Reason = "参数数量不正确"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
 	}
 	//whether father is sxisted
 	FatherAsBytes, err := APIstub.GetState(args[0])
 	var father Human;
 	err = json.Unmarshal(FatherAsBytes,&father)//反序列化
 	if err != nil {
-		return shim.Error("{\"Error\":\"Failed to decode JSON of: " + string(FatherAsBytes)+ "\" to Human}")
+		re.Reason = "父亲不存在"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
 	}
 	//whether mother is sxisted
 	MotherAsBytes, err := APIstub.GetState(args[1])
 	var mother Human;
 	err = json.Unmarshal(MotherAsBytes,&mother)//反序列化
 	if err != nil {
-		return shim.Error("{\"Error\":\"Failed to decode JSON of: " + string(MotherAsBytes)+ "\" to Human}")
+		re.Reason = "母亲不存在"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
 	}
 
 	//whether they are couples
 	if 0  != (strings.Compare(father.SpouseID,mother.ID)){
-		return shim.Error("{\"Error\":\"They are not couples }")
+		re.Reason = "不是夫妻"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
 	}
 	if 0  != (strings.Compare(mother.SpouseID,father.ID)){
-		return shim.Error("{\"Error\":\"They are not couples }")
+		re.Reason = "不是夫妻"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
 	}
 
 	fnum,err := strconv.Atoi(father.NewChild[0])
 	if fnum > 1{
-		return shim.Error("{\"Error\":\"They are have enough children}")
+		re.Reason = "超生"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
 	}
 	mnum,err := strconv.Atoi(mother.ChildID[0])
 	if mnum > 1{
-		return shim.Error("{\"Error\":\"They are have enough children}")
+		re.Reason = "超生"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
 	}
 
 	//create birth certs
@@ -488,8 +513,12 @@ func (s *SmartContract) createBirth(APIstub shim.ChaincodeStubInterface, args []
 func (s *SmartContract) createCheck(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	//3 paramtes father or motherID ,1flow father 2 flow mother,name
+	var re R_Err
+
 	if len(args) != 3 {
-		return shim.Error("Incorrect number of arguments. Expecting 5")
+		re.Reason = "参数数量不正确"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
 	}
 	var check Creat_Check
 
@@ -583,25 +612,35 @@ func (s *SmartContract) createCheck(APIstub shim.ChaincodeStubInterface, args []
 
 func (s *SmartContract) createHuman(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	//3 paramtes checkId , yes or no , name
+	var re R_Err
+
 	if len(args) != 3 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
+		re.Reason = "参数数量不正确"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
 	}
 	//whether check is exitd
 	checkAsBytes, err := APIstub.GetState(args[0])
 	var check Creat_Check;
 	err = json.Unmarshal(checkAsBytes,&check)//反序列化
 	if err != nil {
-		return shim.Error("{\"Error\":\"Failed to decode JSON of check}")
+		re.Reason = "申请表不存在"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
 	}
 	
 	for i := 0; i < 9; i++{
 		if 0 != strings.Compare(check.Check[i],"1"){
-			return shim.Error("{\"Error\":\"Check not right}")
+			re.Reason = "条件不符"
+		    reAsBytes, _ := json.Marshal(re)    
+		    return shim.Success(reAsBytes)
 		}
 	}
 
 	if 0 != strings.Compare(args[1],"1"){
-		return shim.Error("{\"Error\":\"Do not agree}")
+			re.Reason = "不被批准"
+		    reAsBytes, _ := json.Marshal(re)    
+		    return shim.Success(reAsBytes)
 	}
 
 	//whether father is sxisted
@@ -609,14 +648,18 @@ func (s *SmartContract) createHuman(APIstub shim.ChaincodeStubInterface, args []
 	var father Human;
 	err = json.Unmarshal(FatherAsBytes,&father)//反序列化
 	if err != nil {
-		return shim.Error("{\"Error\":\"Failed to decode JSON of: " + string(FatherAsBytes)+ "\" to Human}")
+		    re.Reason = "父亲不存在"
+		    reAsBytes, _ := json.Marshal(re)    
+		    return shim.Success(reAsBytes)
 	}
 	//whether mother is sxisted
 	MotherAsBytes, err := APIstub.GetState(check.MotherID)
 	var mother Human;
 	err = json.Unmarshal(MotherAsBytes,&mother)//反序列化
 	if err != nil {
-		return shim.Error("{\"Error\":\"Failed to decode JSON of: " + string(MotherAsBytes)+ "\" to Human}")
+		    re.Reason = "母亲不存在"
+		    reAsBytes, _ := json.Marshal(re)    
+		    return shim.Success(reAsBytes)
 	}
 	
 	//get the child birth cert
@@ -627,7 +670,9 @@ func (s *SmartContract) createHuman(APIstub shim.ChaincodeStubInterface, args []
 	var child Birth
 	err = json.Unmarshal(ChildAsBytes,&child)//反序列化
 	if err != nil {
-		return shim.Error("{\"Error\":\"Failed to decode JSON of birth cert}")
+		    re.Reason = "出生证不存在"
+		    reAsBytes, _ := json.Marshal(re)    
+		    return shim.Success(reAsBytes)
 	}
 
 	//create new human
@@ -689,8 +734,12 @@ func (s *SmartContract) createHuman(APIstub shim.ChaincodeStubInterface, args []
 
 func (s *SmartContract) marryCheck(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	//2paramtes husbandID ,wifeID
+	var re R_Err
+
 	if len(args) != 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
+		re.Reason = "参数数量不正确"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
 	}
 
 	var check Marry_Check
@@ -754,8 +803,12 @@ func (s *SmartContract) marryCheck(APIstub shim.ChaincodeStubInterface, args []s
 
 func (s *SmartContract) divorceCheck(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	//3paramtes husbandID ,wifeID
+	var re R_Err
+
 	if len(args) != 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
+		re.Reason = "参数数量不正确"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
 	}
 
 	var check Divorce_Check
@@ -811,25 +864,35 @@ func (s *SmartContract) divorceCheck(APIstub shim.ChaincodeStubInterface, args [
 
 func (s *SmartContract) marry(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	//3par  checkId , yes or no , date 20171223
+	var re R_Err
+
 	if len(args) != 3 {
-		return shim.Error("Incorrect number of arguments. Expecting 3")
+		re.Reason = "参数数量不正确"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
 	}
 	//whether check is exitd
 	checkAsBytes, err := APIstub.GetState(args[0])
 	var check Marry_Check;
 	err = json.Unmarshal(checkAsBytes,&check)//反序列化
 	if err != nil {
-		return shim.Error("{\"Error\":\"Failed to decode JSON of check}")
+		    re.Reason = "申请表不存在"
+		    reAsBytes, _ := json.Marshal(re)    
+		    return shim.Success(reAsBytes)
 	}
 	
 	for i := 0; i < 6; i++{
 		if 0 != strings.Compare(check.Check[i],"1") {
-			return shim.Error("{\"Error\":\"Check not right}")
+			re.Reason = "条件不符"
+		    reAsBytes, _ := json.Marshal(re)    
+		    return shim.Success(reAsBytes)
 		}
 	}
 
 	if 0 != strings.Compare(args[1],"1"){
-		return shim.Error("{\"Error\":\"Do not agree}")
+		    re.Reason = "未被批准"
+		    reAsBytes, _ := json.Marshal(re)    
+		    return shim.Success(reAsBytes)
 	}
 
 	//whether husband is exitd
@@ -837,14 +900,18 @@ func (s *SmartContract) marry(APIstub shim.ChaincodeStubInterface, args []string
 	var husband Human;
 	err = json.Unmarshal(husbandAsBytes,&husband)//反序列化
 	if err != nil {
-		return shim.Error("{\"Error\":\"Failed to decode JSON of husband}")
+		    re.Reason = "丈夫不存在"
+		    reAsBytes, _ := json.Marshal(re)    
+		    return shim.Success(reAsBytes)
 	}
 	//whether wife is exitd
 	wifeAsBytes, err := APIstub.GetState(check.Wife_ID)
 	var wife Human;
 	err = json.Unmarshal(wifeAsBytes,&wife)//反序列化
 	if err != nil {
-		return shim.Error("{\"Error\":\"Failed to decode JSON of wife}")
+		    re.Reason = "妻子不存在"
+		    reAsBytes, _ := json.Marshal(re)    
+		    return shim.Success(reAsBytes)
 	}
 
 	//generate marry id
@@ -884,25 +951,35 @@ func (s *SmartContract) marry(APIstub shim.ChaincodeStubInterface, args []string
 
 func (s *SmartContract) divorce(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	//3par  checkId , yes or no , date 20171223
+	var re R_Err
+
 	if len(args) != 3 {
-		return shim.Error("Incorrect number of arguments. Expecting 3")
+		re.Reason = "参数数量不正确"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
 	}
 	//whether check is exitd
 	checkAsBytes, err := APIstub.GetState(args[0])
 	var check Divorce_Check;
 	err = json.Unmarshal(checkAsBytes,&check)//反序列化
 	if err != nil {
-		return shim.Error("{\"Error\":\"Failed to decode JSON of check}")
+		    re.Reason = "申请表不存在"
+		    reAsBytes, _ := json.Marshal(re)    
+		    return shim.Success(reAsBytes)
 	}
 	
 	for i := 0; i < 5; i++{
 		if 0 != strings.Compare(check.Check[i],"1") {
-			return shim.Error("{\"Error\":\"Check not right}")
+			re.Reason = "条件不符"
+		    reAsBytes, _ := json.Marshal(re)    
+		    return shim.Success(reAsBytes)
 		}
 	}
 
 	if 0 != strings.Compare(args[1],"1"){
-		return shim.Error("{\"Error\":\"Do not agree}")
+		    re.Reason = "未被批准"
+		    reAsBytes, _ := json.Marshal(re)    
+		    return shim.Success(reAsBytes)
 	}
 
 	//whether husband is exitd
@@ -910,14 +987,18 @@ func (s *SmartContract) divorce(APIstub shim.ChaincodeStubInterface, args []stri
 	var husband Human;
 	err = json.Unmarshal(husbandAsBytes,&husband)//反序列化
 	if err != nil {
-		return shim.Error("{\"Error\":\"Failed to decode JSON of husband}")
+		    re.Reason = "丈夫不存在"
+		    reAsBytes, _ := json.Marshal(re)    
+		    return shim.Success(reAsBytes)
 	}
 	//whether wife is exitd
 	wifeAsBytes, err := APIstub.GetState(check.Wife_ID)
 	var wife Human;
 	err = json.Unmarshal(wifeAsBytes,&wife)//反序列化
 	if err != nil {
-		return shim.Error("{\"Error\":\"Failed to decode JSON of wife}")
+		    re.Reason = "妻子不存在"
+		    reAsBytes, _ := json.Marshal(re)    
+		    return shim.Success(reAsBytes)
 	}
 
 	//change Marry card
@@ -925,7 +1006,9 @@ func (s *SmartContract) divorce(APIstub shim.ChaincodeStubInterface, args []stri
 	cardAsBytes, err := APIstub.GetState(check.Marry_Cert)
 	err = json.Unmarshal(cardAsBytes,&card)//反序列化
 	if err != nil {
-		return shim.Error("{\"Error\":\"Failed to decode JSON of Marry_Card}")
+		    re.Reason = "结婚证书不存在"
+		    reAsBytes, _ := json.Marshal(re)    
+		    return shim.Success(reAsBytes)
 	}
 	card.State = "离婚"
 	card.Date = strings.Join([]string{args[2][0:4],args[2][4:6],args[2][5:7]},"-") 
@@ -951,8 +1034,12 @@ func (s *SmartContract) divorce(APIstub shim.ChaincodeStubInterface, args []stri
 }
 
 func (s *SmartContract) addInter(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	var re R_Err
+
 	if len(args) != 3 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
+		re.Reason = "参数数量不正确"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
 	}
 	var humanA Human
 	humanA.ID       = args[0]
