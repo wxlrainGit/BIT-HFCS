@@ -157,7 +157,7 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	humanB.NewChild[0] = "0"
 
 	var humanC Human
-	humanC.ID          = "110105199409026656"
+	humanC.ID          = "110105199409026616"
 	humanC.Sex         = "男"
 	humanC.Name        = "王雷雷"
 	humanC.FatherID    = "110105197003025376"
@@ -167,13 +167,141 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 
 
 	var humanD Human
-	humanD.ID          = "110105199409026646"
+	humanD.ID          = "110105199409026626"
 	humanD.Sex         = "女"
 	humanD.Name        = "张梅梅"
 	humanD.FatherID    = "110105197107025376"
 	humanD.MotherID    = "110105197303055386"
 	humanD.ChildID[0]  = "0"
 	humanD.NewChild[0] = "0"
+
+	var humanE Human
+	humanE.ID          = "110105199409026636"
+	humanE.Sex         = "男"
+	humanE.Name        = "张雷雷"
+	humanE.FatherID    = "110105197107025376"
+	humanE.MotherID    = "110105197303055386"
+	humanE.ChildID[0]  = "0"
+	humanE.NewChild[0] = "0"
+
+	var humanF Human
+	humanF.ID          = "110105199409026646"
+	humanF.Sex         = "女"
+	humanF.Name        = "宋梅梅"
+	humanF.FatherID    = "110105197107025376"
+	humanF.MotherID    = "110105197303055386"
+	humanF.ChildID[0]  = "0"
+	humanF.NewChild[0] = "0"
+
+	var humanG Human
+	humanG.ID          = "110105199409026656"
+	humanG.Sex         = "男"
+	humanG.Name        = "赵雷雷"
+	humanG.FatherID    = "110105197107025376"
+	humanG.MotherID    = "110105197303055386"
+	humanG.ChildID[0]  = "0"
+	humanG.NewChild[0] = "0"
+	
+	var humanH Human
+	humanH.ID          = "110105199409026666"
+	humanH.Sex         = "女"
+	humanH.Name        = "孙梅梅"
+	humanH.FatherID    = "110105197107025376"
+	humanH.MotherID    = "110105197303055386"
+	humanH.ChildID[0]  = "0"
+	humanH.NewChild[0] = "0"
+
+	var humanI Human
+	humanI.ID          = "110105199409026696"
+	humanI.Sex         = "男"
+	humanI.Name        = "钱雷雷"
+	humanI.FatherID    = "110105197107025376"
+	humanI.MotherID    = "110105197303055386"
+	humanI.ChildID[0]  = "0"
+	humanI.NewChild[0] = "0"
+
+	var humanK Human
+	humanK.ID          = "110105199409026606"
+	humanK.Sex         = "女"
+	humanK.Name        = "刘梅梅"
+	humanK.FatherID    = "110105197003025376"
+	humanK.MotherID    = "110105197302055386"
+	humanK.ChildID[0]  = "0"
+ 	humanK.NewChild[0] = "0"
+
+ 	var human1 Human
+	human1.ID          = "110105199409026675"
+	human1.Sex         = "男"
+	human1.Name        = "李二"
+	human1.FatherID    = "110105197003025376"
+	human1.MotherID    = "110105197302055386"
+	human1.ChildID[0]  = "0"
+ 	human1.NewChild[0] = "0"
+
+
+	var human2 Human
+	human2.ID          = "110105199409026685"
+	human2.Sex         = "女"
+	human2.Name        = "韩娟"
+	human2.ChildID[0]  = "0"
+	human2.NewChild[0] = "0"
+
+	var human3 Human
+	human3.ID          = "110105199409026615"
+	human3.Sex         = "男"
+	human3.Name        = "王雷"
+	human3.ChildID[0]  = "0"
+	human3.NewChild[0] = "0"
+
+
+	var human4 Human
+	human4.ID          = "110105199409026625"
+	human4.Sex         = "女"
+	human4.Name        = "张梅"
+	human4.ChildID[0]  = "0"
+	human4.NewChild[0] = "0"
+
+	var human5 Human
+	human5.ID          = "110105199409026635"
+	human5.Sex         = "男"
+	human5.Name        = "张雷"
+	human5.ChildID[0]  = "0"
+	human5.NewChild[0] = "0"
+
+	var human6 Human
+	human6.ID          = "110105199409026645"
+	human6.Sex         = "女"
+	human6.Name        = "宋梅"
+	human6.ChildID[0]  = "0"
+	human6.NewChild[0] = "0"
+
+	var human7 Human
+	human7.ID          = "110105199409026655"
+	human7.Sex         = "男"
+	human7.Name        = "赵雷雷"
+	human7.ChildID[0]  = "0"
+	human7.NewChild[0] = "0"
+	
+	var human8 Human
+	human8.ID          = "110105199409026665"
+	human8.Sex         = "女"
+	human8.Name        = "孙梅"
+	human8.ChildID[0]  = "0"
+	human8.NewChild[0] = "0"
+
+	var human9 Human
+	human9.ID          = "110105199409026695"
+	human9.Sex         = "男"
+	human9.Name        = "钱雷"
+	human9.ChildID[0]  = "0"
+	human9.NewChild[0] = "0"
+
+	var human10 Human
+	human10.ID          = "110105199409026605"
+	human10.Sex         = "女"
+	human10.Name        = "刘梅"
+	human10.ChildID[0]  = "0"
+ 	human10.NewChild[0] = "0"
 
 	
 	humanAsBytes, _ := json.Marshal(humanA)
@@ -187,6 +315,55 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 
 	humanDAsBytes, _ := json.Marshal(humanD)
 	APIstub.PutState(humanD.ID, humanDAsBytes)
+
+	humanEAsBytes, _ := json.Marshal(humanE)
+	APIstub.PutState(humanE.ID, humanEAsBytes)
+
+	humanFAsBytes, _ := json.Marshal(humanF)
+	APIstub.PutState(humanF.ID, humanFAsBytes)
+
+	humanGAsBytes, _ := json.Marshal(humanG)
+	APIstub.PutState(humanG.ID, humanGAsBytes)
+
+	humanHAsBytes, _ := json.Marshal(humanH)
+	APIstub.PutState(humanH.ID, humanHAsBytes)
+
+	humanIAsBytes, _ := json.Marshal(humanI)
+	APIstub.PutState(humanI.ID, humanIAsBytes)
+
+	humanKAsBytes, _ := json.Marshal(humanK)
+	APIstub.PutState(humanK.ID, humanKAsBytes)
+
+	human1sBytes, _ := json.Marshal(human1)
+	APIstub.PutState(human1.ID, human1sBytes)
+
+	human2AsBytes, _ := json.Marshal(human2)
+	APIstub.PutState(human2.ID, human2AsBytes)
+
+	human3sBytes, _ := json.Marshal(human3)
+	APIstub.PutState(human3.ID, human3sBytes)
+
+	human4AsBytes, _ := json.Marshal(human4)
+	APIstub.PutState(human4.ID, human4AsBytes)
+
+	human5AsBytes, _ := json.Marshal(human5)
+	APIstub.PutState(human5.ID, human5AsBytes)
+
+	human6AsBytes, _ := json.Marshal(human6)
+	APIstub.PutState(human6.ID, human6AsBytes)
+
+	human7AsBytes, _ := json.Marshal(human7)
+	APIstub.PutState(human7.ID, human7AsBytes)
+
+	human8AsBytes, _ := json.Marshal(human8)
+	APIstub.PutState(human8.ID, human8AsBytes)
+
+	human9AsBytes, _ := json.Marshal(human9)
+	APIstub.PutState(human9.ID, human9AsBytes)
+
+	human10AsBytes, _ := json.Marshal(human10)
+	APIstub.PutState(human10.ID, human10AsBytes)
+
 	return shim.Success(nil)
 }
 
