@@ -145,10 +145,6 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	humanA.MotherID    = "110105197302055386"
 	humanA.ChildID[0]  = "0"
  	humanA.NewChild[0] = "0"
- 	humanA.MarryState  = "未婚" 
-	humanA.SpouseName  =  "无"
-	humanA.SpouseID    =  "无"
-	humanA.Marry_Cert  =  "无"
 
 
 	var humanB Human
@@ -159,10 +155,6 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	humanB.MotherID    = "110105197303055386"
 	humanB.ChildID[0]  = "0"
 	humanB.NewChild[0] = "0"
-	humanB.MarryState  = "未婚" 
-	humanB.SpouseName  =  "无"
-	humanB.SpouseID    =  "无"
-	humanB.Marry_Cert  =  "无"
 
 	var humanC Human
 	humanC.ID          = "110105199409026656"
@@ -172,10 +164,6 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	humanC.MotherID    = "110105197302055386"
 	humanC.ChildID[0]  = "0"
 	humanC.NewChild[0] = "0"
-	humanC.MarryState  = "未婚" 
-	humanC.SpouseName  =  "无"
-	humanC.SpouseID    =  "无"
-	humanC.Marry_Cert  =  "无"
 
 
 	var humanD Human
@@ -186,10 +174,6 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	humanD.MotherID    = "110105197303055386"
 	humanD.ChildID[0]  = "0"
 	humanD.NewChild[0] = "0"
-	humanD.MarryState  = "未婚" 
-	humanD.SpouseName  =  "无"
-	humanD.SpouseID    =  "无"
-	humanD.Marry_Cert  =  "无"
 
 	
 	humanAsBytes, _ := json.Marshal(humanA)
@@ -365,10 +349,10 @@ func (s *SmartContract) createCheck(APIstub shim.ChaincodeStubInterface, args []
 
 	//whether they are couples
 	//whether married
-	if 0 == len(father.SpouseID) {
+	if 0 == strings.Compare(father.SpouseID,"") {
 		check.Check[4] = "0"
 		check.Marry_Cert = "不是夫妻"
-	}else if 0 == len(mother.SpouseID) {
+	}else if 0 == strings.Compare(mother.SpouseID,"") {
 		check.Check[4] = "0"
 		check.Marry_Cert = "不是夫妻"
 	}else if 0  != (strings.Compare(father.Marry_Cert,mother.Marry_Cert)){
@@ -566,14 +550,14 @@ func (s *SmartContract) marryCheck(APIstub shim.ChaincodeStubInterface, args []s
 		check.Wife_ID      = wife.ID  
 	}
 	//whether married
-	if 0 != len(husband.SpouseID) {
+	if 0 != strings.Compare(husband.SpouseID,"") {
 		check.Check[2] = "0"
 		check.HusbandState = "已婚"
 	}else{
 		check.Check[2] = "1"
 		check.HusbandState = "未婚"
 	}
-	if 0 != len(wife.SpouseID) {
+	if 0 != strings.Compare(wife.SpouseID,""){
 		check.Check[5] = "0"
 		check.WifeState = "已婚"
 	}else{
@@ -619,10 +603,10 @@ func (s *SmartContract) divorceCheck(APIstub shim.ChaincodeStubInterface, args [
 	check.Check[2] = "1"
 	check.Check[3] = "1"
 	//whether married
-	if 0 == len(husband.SpouseID) {
+	if 0 == strings.Compare(husband.SpouseID,"") {
 		check.Check[4] = "0"
 		check.Marry_Cert = "不是夫妻"
-	}else if 0 == len(wife.SpouseID) {
+	}else if 0 == strings.Compare(wife.SpouseID,"") {
 		check.Check[4] = "0"
 		check.Marry_Cert = "不是夫妻"
 	}else if 0  != (strings.Compare(husband.SpouseID,wife.SpouseID)){
