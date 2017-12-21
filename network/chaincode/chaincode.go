@@ -116,6 +116,7 @@ type Marry_Check struct{
 
 type Creat_Check struct{
 	CheckID            string `json:"审查编号"`
+	Name               string `json:"姓名"`
 	FatherName         string `json:"父亲姓名"`
 	FatherID           string `json:"父亲身份证号"`
 	MotherName         string `json:"母亲姓名"`
@@ -607,6 +608,7 @@ func (s *SmartContract) createCheck(APIstub shim.ChaincodeStubInterface, args []
 		check.HosptialID   = child.HosptialID
 	}
 	    check.CheckStae = "0"
+	    check.Name = args[2]
 		check.CheckID  =  strconv.FormatInt(time.Now().Unix(),10)
 		checkAsBytes, _ := json.Marshal(check)
 	    APIstub.PutState(check.CheckID, checkAsBytes)    
@@ -616,10 +618,10 @@ func (s *SmartContract) createCheck(APIstub shim.ChaincodeStubInterface, args []
 
 
 func (s *SmartContract) createHuman(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
-	//3 paramtes checkId , yes or no , name
+	//3 paramtes checkId , yes or no
 	var re R_Err
 
-	if len(args) != 3 {
+	if len(args) != 2{
 		re.Reason = "参数数量不正确"
 		reAsBytes, _ := json.Marshal(re)    
 		return shim.Success(reAsBytes)
@@ -687,7 +689,7 @@ func (s *SmartContract) createHuman(APIstub shim.ChaincodeStubInterface, args []
 	//create new human
 	var newhuman Human
 	newhuman.Sex      = child.Sex
-	newhuman.Name     = args[2]
+	newhuman.Name     = check.Name
 	newhuman.Date     = child.Date
 	newhuman.MarryState = "未婚"
 	newhuman.SpouseName = "无"
