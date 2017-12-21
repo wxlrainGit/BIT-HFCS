@@ -792,7 +792,7 @@ func (s *SmartContract) marryCheck(APIstub shim.ChaincodeStubInterface, args []s
 }
 
 func (s *SmartContract) divorceCheck(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
-	//3paramtes husbandID ,wifeID
+	//2paramtes husbandID ,wifeID
 	var re R_Err
 
 	if len(args) != 2 {
@@ -910,14 +910,14 @@ func (s *SmartContract) marry(APIstub shim.ChaincodeStubInterface, args []string
 	husband.MarryState = "已婚"
 	husband.Marry_Cert = marry_cert_id
 	husbandAsBytes, _ = json.Marshal(husband)
-	APIstub.PutState(args[0], husbandAsBytes)
+	APIstub.PutState(husband.ID, husbandAsBytes)
 	//become wife
 	wife.SpouseID = husband.ID
 	wife.SpouseName = husband.Name
 	wife.MarryState = "已婚"
 	wife.Marry_Cert = marry_cert_id
 	wifeAsBytes, _ = json.Marshal(wife)
-	APIstub.PutState(args[1], wifeAsBytes)
+	APIstub.PutState(wife.ID, wifeAsBytes)
 
 	var card Marry_Card
 	card.Marry_Cert = marry_cert_id
