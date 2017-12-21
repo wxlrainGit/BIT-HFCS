@@ -137,6 +137,72 @@ type Divorce_Check struct{
  * Best practice is to have any Ledger initialization in separate function -- see initLedger()
  */
 func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
+	var humanA Human
+	humanA.ID          = "110105199409026676"
+	humanA.Sex         = "男"
+	humanA.Name        = "李雷雷"
+	humanA.FatherID    = "110105197003025376"
+	humanA.MotherID    = "110105197302055386"
+	humanA.ChildID[0]  = "0"
+ 	humanA.NewChild[0] = "0"
+ 	humanA.MarryState  = "未婚" 
+	humanA.SpouseName  =  "无"
+	humanA.SpouseID    =  "无"
+	humanA.Marry_Cert  =  "无"
+
+
+	var humanB Human
+	humanB.ID          = "110105199409026686"
+	humanB.Sex         = "女"
+	humanB.Name        = "韩梅梅"
+	humanB.FatherID    = "110105197107025376"
+	humanB.MotherID    = "110105197303055386"
+	humanB.ChildID[0]  = "0"
+	humanB.NewChild[0] = "0"
+	humanB.MarryState  = "未婚" 
+	humanB.SpouseName  =  "无"
+	humanB.SpouseID    =  "无"
+	humanB.Marry_Cert  =  "无"
+
+	var humanC Human
+	humanC.ID          = "110105199409026656"
+	humanC.Sex         = "男"
+	humanC.Name        = "王雷雷"
+	humanC.FatherID    = "110105197003025376"
+	humanC.MotherID    = "110105197302055386"
+	humanC.ChildID[0]  = "0"
+	humanC.NewChild[0] = "0"
+	humanC.MarryState  = "未婚" 
+	humanC.SpouseName  =  "无"
+	humanC.SpouseID    =  "无"
+	humanC.Marry_Cert  =  "无"
+
+
+	var humanD Human
+	humanD.ID          = "110105199409026646"
+	humanD.Sex         = "女"
+	humanD.Name        = "张梅梅"
+	humanD.FatherID    = "110105197107025376"
+	humanD.MotherID    = "110105197303055386"
+	humanD.ChildID[0]  = "0"
+	humanD.NewChild[0] = "0"
+	humanD.MarryState  = "未婚" 
+	humanD.SpouseName  =  "无"
+	humanD.SpouseID    =  "无"
+	humanD.Marry_Cert  =  "无"
+
+	
+	humanAsBytes, _ := json.Marshal(humanA)
+	APIstub.PutState(humanA.ID, humanAsBytes)
+
+	humanBAsBytes, _ := json.Marshal(humanB)
+	APIstub.PutState(humanB.ID, humanBAsBytes)
+
+	humanCsBytes, _ := json.Marshal(humanC)
+	APIstub.PutState(humanC.ID, humanCsBytes)
+
+	humanDAsBytes, _ := json.Marshal(humanD)
+	APIstub.PutState(humanD.ID, humanDAsBytes)
 	return shim.Success(nil)
 }
 
@@ -165,8 +231,6 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.divorce(APIstub, args)
 	}else if function == "createCheck" {
 		return s.createCheck(APIstub, args)
-	}else if function == "initLedger" {
-		return s.initLedger(APIstub)
 	}else if function == "addInter" {
 		return s.addInter(APIstub,args)
 	}
@@ -190,60 +254,6 @@ func (s *SmartContract) queryID(APIstub shim.ChaincodeStubInterface, args []stri
 	
 }
 
-func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
-	var humanA Human
-	humanA.ID       = " "
-	humanA.Sex      = "男"
-	humanA.Name     = "李雷雷"
-	humanA.FatherID = "110105197003025376"
-	humanA.MotherID = "110105197302055386"
-	humanA.ChildID[0] = "0"
- 	humanA.NewChild[0] = "0"
-
-
-	var humanB Human
-	humanB.ID       = "110105199409026686"
-	humanB.Sex      = "女"
-	humanB.Name     = "韩梅梅"
-	humanB.FatherID = "110105197107025376"
-	humanB.MotherID = "110105197303055386"
-	humanB.ChildID[0] = "0"
-	humanB.NewChild[0] = "0"
-
-	var humanC Human
-	humanC.ID       = "110105199409026656"
-	humanC.Sex      = "男"
-	humanC.Name     = "王雷雷"
-	humanC.FatherID = "110105197003025376"
-	humanC.MotherID = "110105197302055386"
-	humanC.ChildID[0] = "0"
-	humanC.NewChild[0] = "0"
-
-
-	var humanD Human
-	humanD.ID       = "110105199409026646"
-	humanD.Sex      = "女"
-	humanD.Name     = "张梅梅"
-	humanD.FatherID = "110105197107025376"
-	humanD.MotherID = "110105197303055386"
-	humanD.ChildID[0] = "0"
-	humanD.NewChild[0] = "0"
-
-	
-	humanAsBytes, _ := json.Marshal(humanA)
-	APIstub.PutState(humanA.ID, humanAsBytes)
-
-	humanBAsBytes, _ := json.Marshal(humanB)
-	APIstub.PutState(humanB.ID, humanBAsBytes)
-
-	humanCsBytes, _ := json.Marshal(humanC)
-	APIstub.PutState(humanC.ID, humanCsBytes)
-
-	humanDAsBytes, _ := json.Marshal(humanD)
-	APIstub.PutState(humanD.ID, humanDAsBytes)
-
-	return shim.Success(nil)
-}
 
 func (s *SmartContract) createBirth(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	//5 paramtes father,mother,childsex,birhdate 20171223,hospitalID
