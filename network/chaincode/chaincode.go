@@ -153,7 +153,9 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	humanA.ID          = "110105199409026676"
 	humanA.Sex         = "男"
 	humanA.Name        = "李雷雷"
+	humanA.FatherName  = "李父"
 	humanA.FatherID    = "110105197003025376"
+	humanA.MotherName  = "李母"
 	humanA.MotherID    = "110105197302055386"
 	humanA.ChildID[0]  = "0"
  	humanA.NewChild[0] = "0"
@@ -163,8 +165,10 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	humanB.ID          = "110105199409026686"
 	humanB.Sex         = "女"
 	humanB.Name        = "韩梅梅"
-	humanB.FatherID    = "110105197107025376"
-	humanB.MotherID    = "110105197303055386"
+	humanB.FatherName  = "韩父"
+	humanB.FatherID    = "110105197003025376"
+	humanB.MotherName  = "韩母"
+	humanB.MotherID    = "110105197302055386"
 	humanB.ChildID[0]  = "0"
 	humanB.NewChild[0] = "0"
 
@@ -172,7 +176,9 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	humanC.ID          = "110105199409026616"
 	humanC.Sex         = "男"
 	humanC.Name        = "王雷雷"
+	humanC.FatherName  = "王父"
 	humanC.FatherID    = "110105197003025376"
+	humanC.MotherName  = "王母"
 	humanC.MotherID    = "110105197302055386"
 	humanC.ChildID[0]  = "0"
 	humanC.NewChild[0] = "0"
@@ -182,8 +188,10 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	humanD.ID          = "110105199409026626"
 	humanD.Sex         = "女"
 	humanD.Name        = "张梅梅"
-	humanD.FatherID    = "110105197107025376"
-	humanD.MotherID    = "110105197303055386"
+	humanD.FatherName  = "张父"
+	humanD.FatherID    = "110105197003025376"
+	humanD.MotherName  = "张母"
+	humanD.MotherID    = "110105197302055386"
 	humanD.ChildID[0]  = "0"
 	humanD.NewChild[0] = "0"
 
@@ -191,8 +199,10 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	humanE.ID          = "110105199409026636"
 	humanE.Sex         = "男"
 	humanE.Name        = "张雷雷"
-	humanE.FatherID    = "110105197107025376"
-	humanE.MotherID    = "110105197303055386"
+	humanE.FatherName  = "张父"
+	humanE.FatherID    = "110105197003025376"
+	humanE.MotherName  = "张母"
+	humanE.MotherID    = "110105197302055386"
 	humanE.ChildID[0]  = "0"
 	humanE.NewChild[0] = "0"
 
@@ -200,8 +210,10 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	humanF.ID          = "110105199409026646"
 	humanF.Sex         = "女"
 	humanF.Name        = "宋梅梅"
-	humanF.FatherID    = "110105197107025376"
-	humanF.MotherID    = "110105197303055386"
+	humanF.FatherName  = "宋父"
+	humanF.FatherID    = "110105197003025376"
+	humanF.MotherName  = "宋母"
+	humanF.MotherID    = "110105197302055386"
 	humanF.ChildID[0]  = "0"
 	humanF.NewChild[0] = "0"
 
@@ -209,8 +221,10 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	humanG.ID          = "110105199409026656"
 	humanG.Sex         = "男"
 	humanG.Name        = "赵雷雷"
-	humanG.FatherID    = "110105197107025376"
-	humanG.MotherID    = "110105197303055386"
+	humanG.FatherName  = "赵父"
+	humanG.FatherID    = "110105197003025376"
+	humanG.MotherName  = "赵母"
+	humanG.MotherID    = "110105197302055386"
 	humanG.ChildID[0]  = "0"
 	humanG.NewChild[0] = "0"
 	
@@ -218,8 +232,10 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	humanH.ID          = "110105199409026666"
 	humanH.Sex         = "女"
 	humanH.Name        = "孙梅梅"
-	humanH.FatherID    = "110105197107025376"
-	humanH.MotherID    = "110105197303055386"
+	humanH.FatherName  = "孙父"
+	humanH.FatherID    = "110105197003025376"
+	humanH.MotherName  = "孙母"
+	humanH.MotherID    = "110105197302055386"
 	humanH.ChildID[0]  = "0"
 	humanH.NewChild[0] = "0"
 
@@ -227,8 +243,10 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	humanI.ID          = "110105199409026696"
 	humanI.Sex         = "男"
 	humanI.Name        = "钱雷雷"
-	humanI.FatherID    = "110105197107025376"
-	humanI.MotherID    = "110105197303055386"
+	humanI.FatherName  = "钱父"
+	humanI.FatherID    = "110105197003025376"
+	humanI.MotherName  = "钱母"
+	humanI.MotherID    = "110105197302055386"
 	humanI.ChildID[0]  = "0"
 	humanI.NewChild[0] = "0"
 
@@ -236,7 +254,9 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	humanK.ID          = "110105199409026606"
 	humanK.Sex         = "女"
 	humanK.Name        = "刘梅梅"
+	humanK.FatherName  = "刘父"
 	humanK.FatherID    = "110105197003025376"
+	humanK.MotherName  = "刘母"
 	humanK.MotherID    = "110105197302055386"
 	humanK.ChildID[0]  = "0"
  	humanK.NewChild[0] = "0"
@@ -245,7 +265,9 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	human1.ID          = "110105199409026675"
 	human1.Sex         = "男"
 	human1.Name        = "李二"
+	human1.FatherName  = "李父"
 	human1.FatherID    = "110105197003025376"
+	human1.MotherName  = "李母"
 	human1.MotherID    = "110105197302055386"
 	human1.ChildID[0]  = "0"
  	human1.NewChild[0] = "0"
@@ -255,6 +277,10 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	human2.ID          = "110105199409026685"
 	human2.Sex         = "女"
 	human2.Name        = "韩娟"
+	human2.FatherName  = "韩父"
+	human2.FatherID    = "110105197003025376"
+	human2.MotherName  = "韩母"
+	human2.MotherID    = "110105197302055386"
 	human2.ChildID[0]  = "0"
 	human2.NewChild[0] = "0"
 
@@ -262,6 +288,10 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	human3.ID          = "110105199409026615"
 	human3.Sex         = "男"
 	human3.Name        = "王雷"
+	human3.FatherName  = "王父"
+	human3.FatherID    = "110105197003025376"
+	human3.MotherName  = "王母"
+	human3.MotherID    = "110105197302055386"
 	human3.ChildID[0]  = "0"
 	human3.NewChild[0] = "0"
 
@@ -270,6 +300,10 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	human4.ID          = "110105199409026625"
 	human4.Sex         = "女"
 	human4.Name        = "张梅"
+	human4.FatherName  = "张父"
+	human4.FatherID    = "110105197003025376"
+	human4.MotherName  = "张母"
+	human4.MotherID    = "110105197302055386"
 	human4.ChildID[0]  = "0"
 	human4.NewChild[0] = "0"
 
@@ -277,6 +311,10 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	human5.ID          = "110105199409026635"
 	human5.Sex         = "男"
 	human5.Name        = "张雷"
+	human5.FatherName  = "张父"
+	human5.FatherID    = "110105197003025376"
+	human5.MotherName  = "张母"
+	human5.MotherID    = "110105197302055386"
 	human5.ChildID[0]  = "0"
 	human5.NewChild[0] = "0"
 
@@ -284,6 +322,10 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	human6.ID          = "110105199409026645"
 	human6.Sex         = "女"
 	human6.Name        = "宋梅"
+	humanF.FatherName  = "宋父"
+	humanF.FatherID    = "110105197003025376"
+	humanF.MotherName  = "宋母"
+	humanF.MotherID    = "110105197302055386"
 	human6.ChildID[0]  = "0"
 	human6.NewChild[0] = "0"
 
@@ -291,6 +333,10 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	human7.ID          = "110105199409026655"
 	human7.Sex         = "男"
 	human7.Name        = "赵雷雷"
+	humanG.FatherName  = "赵父"
+	humanG.FatherID    = "110105197003025376"
+	humanG.MotherName  = "赵母"
+	humanG.MotherID    = "110105197302055386"
 	human7.ChildID[0]  = "0"
 	human7.NewChild[0] = "0"
 	
@@ -298,6 +344,10 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	human8.ID          = "110105199409026665"
 	human8.Sex         = "女"
 	human8.Name        = "孙梅"
+	human8.FatherName  = "孙父"
+	human8.FatherID    = "110105197003025376"
+	human8.MotherName  = "孙母"
+	human8.MotherID    = "110105197302055386"
 	human8.ChildID[0]  = "0"
 	human8.NewChild[0] = "0"
 
@@ -305,6 +355,10 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	human9.ID          = "110105199409026695"
 	human9.Sex         = "男"
 	human9.Name        = "钱雷"
+	human9.FatherName  = "钱父"
+	human9.FatherID    = "110105197003025376"
+	human9.MotherName  = "钱母"
+	human9.MotherID    = "110105197302055386"
 	human9.ChildID[0]  = "0"
 	human9.NewChild[0] = "0"
 
@@ -312,6 +366,10 @@ func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	human10.ID          = "110105199409026605"
 	human10.Sex         = "女"
 	human10.Name        = "刘梅"
+	human10.FatherName  = "刘父"
+	human10.FatherID    = "110105197003025376"
+	human10.MotherName  = "刘母"
+	human10.MotherID    = "110105197302055386"
 	human10.ChildID[0]  = "0"
  	human10.NewChild[0] = "0"
 
@@ -705,10 +763,10 @@ func (s *SmartContract) createHuman(APIstub shim.ChaincodeStubInterface, args []
 		address := father.ID[0:6]
 		date := child.Date
 		if 0 == (strings.Compare("男",child.Sex)){
-			newhuman.ID = strings.Join([]string{address,date,"123",strconv.Itoa(rand.Intn(9))},"")
+			newhuman.ID = strings.Join([]string{address,date,strconv.FormatInt(time.Now().Unix(),10)[7:10],strconv.Itoa(rand.Intn(9))},"")
 		}
 		if 0 != (strings.Compare("男",child.Sex)){
-			newhuman.ID = strings.Join([]string{address,date,"122",strconv.Itoa(rand.Intn(9))},"")
+			newhuman.ID = strings.Join([]string{address,date,strconv.FormatInt(time.Now().Unix(),10)[7:10],strconv.Itoa(rand.Intn(9))},"")
 		}
 	}
 
@@ -716,10 +774,10 @@ func (s *SmartContract) createHuman(APIstub shim.ChaincodeStubInterface, args []
 		address := mother.ID[0:6]
 		date := child.Date
 		if 0 == (strings.Compare("男",child.Sex)){
-			newhuman.ID = strings.Join([]string{address,date,"123",strconv.Itoa(rand.Intn(9))},"")
+			newhuman.ID = strings.Join([]string{address,date,strconv.FormatInt(time.Now().Unix(),10)[7:10],strconv.Itoa(rand.Intn(9))},"")
 		}
 		if 0 != (strings.Compare("男",child.Sex)){
-			newhuman.ID = strings.Join([]string{address,date,"122",strconv.Itoa(rand.Intn(9))},"")
+			newhuman.ID = strings.Join([]string{address,date,strconv.FormatInt(time.Now().Unix(),10)[7:10],strconv.Itoa(rand.Intn(9))},"")
 		}
 	}
 	newhumanAsBytes, _ := json.Marshal(newhuman)
