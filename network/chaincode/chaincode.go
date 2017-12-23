@@ -464,8 +464,10 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 		return s.divorce(APIstub, args)
 	}else if function == "createCheck" {
 		return s.createCheck(APIstub, args)
-	}else if function == "addInter" {
-		return s.addInter(APIstub,args)
+	}else if function == "queryMarryCheck" {
+		return s.queryMarryCheck(APIstub,args)
+	}else if function == "queryCreatCheck" {
+		return s.queryCreatCheck(APIstub,args)
 	}
 	return shim.Error("Invalid Smart Contract function name.")
 	
@@ -490,6 +492,64 @@ func (s *SmartContract) queryID(APIstub shim.ChaincodeStubInterface, args []stri
 	}
    return shim.Success(humanAsBytes)
 	
+}
+
+func (s *SmartContract) queryMarryCheck(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	var re R_Err
+
+	if len(args) != 1 {
+		re.Reason = "参数数量不正确"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
+	}
+
+	
+	checkAsBytes, err := APIstub.GetState(args[0])
+	var check Marry_Check;
+	err = json.Unmarshal(checkAsBytes,&check)//反序列化
+	if err != nil {
+		re.Reason = "申请不存在"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
+	}
+
+	if 0 != strings.Compare(check.CheckStae,"0"){
+		marryAsBytes, _:= APIstub.GetState(check.Marry_Cert)
+		return shim.Success(marryAsBytes)
+	}else{
+		re.Reason = "申请未被处理"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
+	}	
+}
+
+func (s *SmartContract) queryCreatCheck(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	var re R_Err
+
+	if len(args) != 1 {
+		re.Reason = "参数数量不正确"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
+	}
+
+	
+	checkAsBytes, err := APIstub.GetState(args[0])
+	var check Creat_Check;
+	err = json.Unmarshal(checkAsBytes,&check)//反序列化
+	if err != nil {
+		re.Reason = "申请不存在"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
+	}
+
+	if 0 != strings.Compare(check.CheckStae,"0"){
+		humanAsBytes ,_:= APIstub.GetState(check.ID)
+		return shim.Success(humanAsBytes)
+	}else{
+		re.Reason = "申请未被处理"
+		reAsBytes, _ := json.Marshal(re)    
+		return shim.Success(reAsBytes)
+	}	
 }
 
 
