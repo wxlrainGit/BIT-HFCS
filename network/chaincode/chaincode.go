@@ -55,96 +55,96 @@ type SmartContract struct {
 //human ID
 type Human struct {
 	
-	ID            string `json:"身份证号"`
-	Sex           string `json:"性别"`
-	Name          string `json:"姓名"`
-	Date          string `json:"出生日期"`
-	FatherName    string `json:"父亲姓名"`
-	FatherID      string `json:"父亲身份证号"`
-	MotherName    string `json:"母亲姓名"`
-	MotherID      string `json:"母亲身份证号"`
-	MarryState    string `json:"婚姻状态"`
-	SpouseName    string `json:"配偶姓名"`
-	SpouseID      string `json:"配偶身份证号"`
-	Marry_Cert    string `json:"结婚证书"`
-	ChildID  [10] string `json:"子女身份证号"`
-	ChildName[10] string `json:"子女姓名"`
-	NewChild [10] string `json:"子女出生证明"`
+	ID            string `json:"id"`
+	Sex           string `json:"sex"`
+	Name          string `json:"name"`
+	Date          string `json:"date"`
+	FatherName    string `json:"fathername"`
+	FatherID      string `json:"fatherid"`
+	MotherName    string `json:"mothername"`
+	MotherID      string `json:"motherid"`
+	MarryState    string `json:"marrystate"`
+	SpouseName    string `json:"spousename"`
+	SpouseID      string `json:"spouseid"`
+	Marry_Cert    string `json:"marry_cert"`
+	ChildID  [10] string `json:"childid"`
+	ChildName[10] string `json:"childname"`
+	NewChild [10] string `json:"newchild"`
 }
 
 //birth cert
 type Birth struct {
     
-    BirthName    string `json:"新生儿姓名"`
-	BirthID      string `json:"出生证书编号"`
-	Date         string `json:"出生日期"`
-	Sex          string `json:"性别"`
-	Weight       string `json:"体重"`
-	Health       string `json:"健康情况"`
-	Place        string `json:"出生地"`
-	FatherName   string `json:"父亲姓名"`
-	FatherID     string `json:"父亲身份证号"`
-	MotherName   string `json:"母亲姓名"`
-	MotherID     string `json:"母亲身份证号"`
-	HosptialID   string `json:"接生机构"`
+    BirthName    string `json:"birthname"`
+	BirthID      string `json:"birthid"`
+	Date         string `json:"date"`
+	Sex          string `json:"sex"`
+	Weight       string `json:"weight"`
+	Health       string `json:"health"`
+	Place        string `json:"place"`
+	FatherName   string `json:"fathername"`
+	FatherID     string `json:"fatherid"`
+	MotherName   string `json:"mothername"`
+	MotherID     string `json:"motherid"`
+	HosptialID   string `json:"hosptialid"`
 }
 
 //marry card
 type Marry_Card struct {
 
-	Marry_Cert     string `json:"证书编号"`
-	State          string `json:"状态"`
-	Husband_Name   string `json:"丈夫姓名"`
-	Husband_ID     string `json:"丈夫身份证号"`
-	Wife_Name      string `json:"妻子姓名"`
-	Wife_ID        string `json:"妻子身份证号"`
-	Date           string `json:"登记日期"`
+	Marry_Cert     string `json:"marry_cert"`
+	State          string `json:"state"`
+	Husband_Name   string `json:"husband_name"`
+	Husband_ID     string `json:"husband_id"`
+	Wife_Name      string `json:"wife_name"`
+	Wife_ID        string `json:"wife_id"`
+	Date           string `json:"date"`
 }
 
 //marry check 
 type Marry_Check struct{
-	CheckID  		 string `json:"审查编号"`
-	Husband_Name     string `json:"丈夫姓名"`
-	Husband_ID       string `json:"丈夫身份证号"`
-	HusbandState     string `json:"丈夫婚姻状态"`
-	Wife_Name        string `json:"妻子姓名"`
-	Wife_ID          string `json:"妻子身份证号"`
-	WifeState        string `json:"妻子婚姻状态"`
-	Check [6]        string `json:"判断结果"`
-	CheckStae        string `json:"审查表状态"`
-	Marry_Cert       string `json:"结婚证书"`
+	CheckID  		 string `json:"checkid"`
+	Husband_Name     string `json:"husband_name"`
+	Husband_ID       string `json:"husband_id"`
+	HusbandState     string `json:"husbandstate"`
+	Wife_Name        string `json:"wife_name"`
+	Wife_ID          string `json:"wife_id"`
+	WifeState        string `json:"wifestate"`
+	Check [6]        string `json:"check"`
+	CheckStae        string `json:"checkstae"`
+	Marry_Cert       string `json:"marry_cert"`
 }
 
 type Creat_Check struct{
-	CheckID            string `json:"审查编号"`
-	Name               string `json:"姓名"`
-	FatherName         string `json:"父亲姓名"`
-	FatherID           string `json:"父亲身份证号"`
-	MotherName         string `json:"母亲姓名"`
-	MotherID           string `json:"母亲身份证号"`
-	Marry_Cert         string `json:"父母结婚证书编号"`
-	BirthID            string `json:"出生证书编号"`
-	BirthDate          string `json:"出生日期"`
-	Sex                string `json:"性别"`
-	HosptialID         string `json:"接生机构"`
-	Check [9]          string `json:"判断结果"`
-	CheckStae          string `json:"审查表状态"`
-	ID                 string `json:"身份证号"`
+	CheckID            string `json:"checkid"`
+	Name               string `json:"name"`
+	FatherName         string `json:"fathername"`
+	FatherID           string `json:"fatherid"`
+	MotherName         string `json:"mothername"`
+	MotherID           string `json:"motherid"`
+	Marry_Cert         string `json:"marry_cert"`
+	BirthID            string `json:"birthid"`
+	BirthDate          string `json:"birthdate"`
+	Sex                string `json:"sex"`
+	HosptialID         string `json:"hosptialid"`
+	Check [9]          string `json:"check"`
+	CheckStae          string `json:"checkstae"`
+	ID                 string `json:"id"`
 }
 
 type Divorce_Check struct{
-	CheckID  		 string `json:"审查编号"`
-	Husband_Name     string `json:"丈夫姓名"`
-	Husband_ID       string `json:"丈夫身份证号"`
-	Wife_Name        string `json:"妻子姓名"`
-	Wife_ID          string `json:"妻子身份证号"`
-	Marry_Cert       string `json:"结婚证书编号"`
-	Check [5]        string `json:"判断结果"`
-	CheckStae        string `json:"审查表状态"`
+	CheckID  		 string `json:"checkid"`
+	Husband_Name     string `json:"husband_name"`
+	Husband_ID       string `json:"husband_id"`
+	Wife_Name        string `json:"wife_name"`
+	Wife_ID          string `json:"wife_id"`
+	Marry_Cert       string `json:"marry_cert"`
+	Check [5]        string `json:"check"`
+	CheckStae        string `json:"checkstae"`
 }
 
 type R_Err struct{
-	Reason  		 string `json:"原因"`
+	Reason  		 string `json:"reason"`
 }
 /*
  * The Init method is called when the Smart Contract "fabcar" is instantiated by the blockchain network
