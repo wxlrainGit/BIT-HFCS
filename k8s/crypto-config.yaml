@@ -1,0 +1,66 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+# ---------------------------------------------------------------------------
+# "OrdererOrgs" - Definition of organizations managing orderer nodes
+# ---------------------------------------------------------------------------
+OrdererOrgs:
+  # ---------------------------------------------------------------------------
+  # Orderer
+  # ---------------------------------------------------------------------------
+  - Name: Orderer
+    Domain: fabric-net.svc.cluster.local
+    # ---------------------------------------------------------------------------
+    # "Specs" - See PeerOrgs below for complete description
+    # ---------------------------------------------------------------------------
+    Specs:
+      - Hostname: orderer
+# ---------------------------------------------------------------------------
+# "PeerOrgs" - Definition of organizations managing peer nodes
+# ---------------------------------------------------------------------------
+PeerOrgs:
+  # ---------------------------------------------------------------------------
+  # Org1
+  # ---------------------------------------------------------------------------
+  - Name: Org1
+    Domain: org1.fabric-net.svc.cluster.local
+    CA:
+      Hostname: ca0-org1
+      CommonName: ca0-org1.fabric-net.svc.cluster.local
+    Specs:
+      - Hostname: peer0-org1
+        CommonName: peer0-org1.fabric-net.svc.cluster.local
+    Users:
+      Count: 1
+  - Name: Org2
+    Domain: org2.fabric-net.svc.cluster.local
+    CA:
+      Hostname: ca0-org2
+      CommonName: ca0-org2.fabric-net.svc.cluster.local
+    Specs:
+      - Hostname: peer0-org2
+        CommonName: peer0-org2.fabric-net.svc.cluster.local
+    Users:
+      Count: 1
+  - Name: Org3
+    Domain: org3.fabric-net.svc.cluster.local
+    CA:
+      Hostname: ca0-org3
+      CommonName: ca0-org3.fabric-net.svc.cluster.local
+    Specs:
+      - Hostname: peer0-org3
+        CommonName: peer0-org3.fabric-net.svc.cluster.local
+    Users:
+      Count: 1
+  - Name: Org4
+    Domain: org4.fabric-net.svc.cluster.local
+    CA:
+      Hostname: ca0-org4
+      CommonName: ca0-org4.fabric-net.svc.cluster.local
+    Specs:
+      - Hostname: peer0-org4
+        CommonName: peer0-org4.fabric-net.svc.cluster.local
+    Users:
+      Count: 1
