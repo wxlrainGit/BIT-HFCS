@@ -170,9 +170,9 @@ installChaincode 2
 echo "Install chaincode on org4/peer0..."
 installChaincode 3
 
-#Instantiate chaincode on Peer0/Org3
-echo "Instantiating chaincode on org4/peer0..."
-instantiateChaincode 3
+#Instantiate chaincode on Peer0/Org1
+echo "Instantiating chaincode on org1/peer0..."
+instantiateChaincode 0
 
 
 echo
