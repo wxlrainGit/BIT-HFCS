@@ -14,8 +14,6 @@ Sun Wen Hua
 
 Wang Xiao Long
 
-Xu Chen Hao
-
 Zhang Yu Long
 
 ## Server part 
